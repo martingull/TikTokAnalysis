@@ -18,6 +18,6 @@ Copy paste the `tik_tok_report.json` into a LLM and start asking questins regard
 - apk_analysis.py - decompile the APK file so we can inspect the source code of the project.
 - flatten_decompiled_files.py - TODO: make one large file from decompiled files to feed to context.
 - reconstructed_sourcecode.py - TODO: based on hierarchy and flatten files create a reconstruction of the sourcecode.
-- llm_analysis.py - TODO: go through the androguard and apk files using langchain, create analysis of results.
+- llm_analysis.py - go through the androguard and apk files using langchain, create analysis of results.
 - dashboard.py - TODO: create a dashboard of the findings.
 - requirements.txt - project ran fine on Python 3.12.9
