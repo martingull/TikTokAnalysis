@@ -1,0 +1,25 @@
+# Local environment
+.env
+.venv/
+bin/
+include/
+lib/
+share/
+
+# Python cache/build output
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# APK inputs and decompiled/generated analysis output
+*.apk
+*_Decompiled/
+tiktok_decompiled/
+tik_tok_report*.json*
+metadata.json
+llm_analysis.md
+
+# OS/editor noise
+.DS_Store

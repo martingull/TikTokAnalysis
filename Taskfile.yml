@@ -1,0 +1,87 @@
+version: '3'
+
+vars:
+  APK: '{{.APK | default "TikTok_39.2.1_APKPure.apk"}}'
+  REPORT: '{{.REPORT | default "tik_tok_report.json"}}'
+  DECOMPILE_DIR: '{{.DECOMPILE_DIR | default "tiktok_decompiled"}}'
+
+tasks:
+  default:
+    desc: List available workflows
+    cmds:
+      - task --list
+
+  setup:
+    desc: Sync Python dependencies with uv
+    preconditions:
+      - sh: command -v uv
+        msg: uv is required. Install uv before running this task.
+    cmds:
+      - uv sync
+
+  check:
+    desc: Compile the project Python scripts
+    cmds:
+      - uv run python -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py
+
+  analyze:
+    desc: Generate an Androguard JSON report from APK={{.APK}}
+    preconditions:
+      - sh: test -f "{{.APK}}"
+        msg: APK file not found. Set APK=/path/to/app.apk.
+    cmds:
+      - uv run python androguard_analysis.py "{{.APK}}" -o "{{.REPORT}}"
+
+  dashboard:
+    desc: Render the terminal dashboard for REPORT={{.REPORT}}
+    preconditions:
+      - sh: test -f "{{.REPORT}}"
+        msg: Report file not found. Run task analyze first or set REPORT=/path/to/report.json.
+    cmds:
+      - uv run python dashboard.py "{{.REPORT}}"
+
+  report:
+    desc: Generate the Androguard report and render it in the dashboard
+    cmds:
+      - task: analyze
+        vars:
+          APK: '{{.APK}}'
+          REPORT: '{{.REPORT}}'
+      - task: dashboard
+        vars:
+          REPORT: '{{.REPORT}}'
+
+  llm:
+    desc: Generate llm_analysis.md from tik_tok_report.json using Azure OpenAI env vars
+    preconditions:
+      - sh: test -f tik_tok_report.json
+        msg: tik_tok_report.json not found. Run task analyze first with the default REPORT.
+      - sh: test -f .env
+        msg: .env not found. Create it from .env.template with Azure OpenAI settings.
+    cmds:
+      - uv run python llm_analysis.py
+
+  decompile:
+    desc: Decompile APK={{.APK}} into DECOMPILE_DIR={{.DECOMPILE_DIR}} with apktool
+    preconditions:
+      - sh: command -v apktool
+        msg: apktool is required for decompilation.
+      - sh: test -f "{{.APK}}"
+        msg: APK file not found. Set APK=/path/to/app.apk.
+    cmds:
+      - apktool d "{{.APK}}" -o "{{.DECOMPILE_DIR}}" -f
+
+  apk-scan:
+    desc: Run apk_analysis.py decompile and smali keyword scan
+    preconditions:
+      - sh: command -v apktool
+        msg: apktool is required by apk_analysis.py.
+      - sh: test -f TikTok_39.2.1_APKPure.apk
+        msg: TikTok_39.2.1_APKPure.apk not found. apk_analysis.py currently uses this hardcoded APK name.
+    cmds:
+      - uv run python apk_analysis.py
+
+  run:
+    desc: Run the placeholder Python entrypoint
+    cmds:
+      - uv run python main.py

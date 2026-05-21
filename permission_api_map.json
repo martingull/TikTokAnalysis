@@ -1,0 +1,9 @@
+{
+    "android.permission.CAMERA": [
+        "Landroid/hardware/Camera;->open",
+        "Landroid/hardware/Camera;->open"
+    ],
+    "android.permission.ACCESS_FINE_LOCATION": [
+        "Landroid/location/LocationManager;->getLastKnownLocation"
+    ]
+}
