@@ -22,4 +22,4 @@ Copy paste the `tik_tok_report.json` into a LLM and start asking questins regard
 - llm_analysis.py - go through the androguard and apk files using langchain, create analysis of results.
 - dashboard.py - TODO: create a dashboard of the findings.
 - Taskfile.yml - not finished at this point.
-- requirements.txt - project ran fine on Python 3.12.9
+- requirements.txt
