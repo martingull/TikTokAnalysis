@@ -1,4 +1,5 @@
 # Introduction
+- A stub that should be picked up again...
 - A project to reverse engineer the tik-tok apk. The motivation for the project is to create a demo and some slideware to use as recruitment material. Chinese tech is having a hardtime in the west due to tiktok at the time this was created, so seemed like a good analysis to create some attention.
 - Download a APK file from any APK repo. Then perform apk and androguard analysis.
 - The idea of the project is to
@@ -7,7 +8,7 @@
     - Execution: Using LLM models better reconstruct the source code.
 
 # Instructions
-Easist thing is to run the `androguard.py` analysis and parse the output using a LLM model.
+Easist thing is to run the `androguard.py` analysis and parse the output using a LLM model. But, also use the decompiled files, when I made the analysis I just used the OpenAI web interface and pasted code in there. The results never made it to the codebase.
 ```bash
 uv run androguard_analysis.py TikTok_39.2.1_APKPure.apk -o tik_tok_report.json
 ```
@@ -20,4 +21,5 @@ Copy paste the `tik_tok_report.json` into a LLM and start asking questins regard
 - reconstructed_sourcecode.py - TODO: based on hierarchy and flatten files create a reconstruction of the sourcecode.
 - llm_analysis.py - go through the androguard and apk files using langchain, create analysis of results.
 - dashboard.py - TODO: create a dashboard of the findings.
+- Taskfile.yml - not finished at this point.
 - requirements.txt - project ran fine on Python 3.12.9
