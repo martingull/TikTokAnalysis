@@ -4,6 +4,10 @@ This project statically analyzes consumer Android APKs and builds evidence-backe
 
 The working premise is that modern consumer tech can be intrusive. The repo still separates that premise from evidence: permissions are capability evidence, static API references are code-presence evidence, and runtime behavior requires dynamic validation.
 
+## Project Direction
+
+This repo is moving toward a repeatable CLI tool in the style of `rectool`: Codex or VS Code Codex can be used as the planner, reviewer, and report assistant, but execution should stay in explicit Taskfile/Python commands. The durable interface is the CLI workflow, not an ad hoc chat transcript.
+
 ## Current Report
 
 The current human-consumable report artifact is:
@@ -40,12 +44,21 @@ Decompile any APK:
 task decompile APK=/path/to/app.apk DECOMPILE_DIR=app_decompiled
 ```
 
+Optionally create Java-like source with JADX:
+
+```bash
+task jadx APK=/path/to/app.apk JADX_DIR=app_jadx
+```
+
 Create reconstruction inventory and prompted report draft:
 
 ```bash
 task inventory DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json INVENTORY_MD=app_inventory.md
+task source-findings DECOMPILE_DIR=app_decompiled JADX_DIR=app_jadx INVENTORY=app_inventory.json SOURCE_FINDINGS_MD=app_source_findings.md
 task report-draft REPORT=app_report.json INVENTORY=app_inventory.json REPORT_MD=app_privacy_report.md
 ```
+
+For source reconstruction, JADX is the reading layer and apktool smali is the evidence layer. Use JADX output to understand Java/Kotlin-like control flow, then verify publishable claims against smali line references.
 
 `task report-draft` uses `PRIVACY_PROMPT` from `promps.py` and OpenAI SDK settings from `.env`. It also writes a deterministic evidence brief before prompting:
 
@@ -78,6 +91,7 @@ task report-draft
 - `androguard_analysis.py` - creates a structured APK report from Androguard.
 - `apk_analysis.py` - decompiles an APK with apktool and scans smali for privacy-relevant patterns.
 - `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
+- `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
 - `report_builder.py` - creates a deterministic evidence brief.
 - `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
 - `dashboard.py` - renders a terminal dashboard for the structured report.
@@ -88,4 +102,4 @@ task report-draft
 ## Current Path Status
 
 - Path 1, Androguard structured analysis: Milestone 1 complete.
-- Path 2, source reconstruction: inventory exists; manual reconstruction with line citations remains.
+- Path 2, source reconstruction: inventory and source-finding packet generation exist; manual reconstruction with line citations remains.

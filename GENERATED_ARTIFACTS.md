@@ -19,10 +19,14 @@ These files support or reproduce the report:
 | `privacy_report_prompt_payload.md` | Exact prompt payload sent to the model | `task report-prompt` or `task report-draft` |
 | `reconstruction_inventory.md` | Human-readable source reconstruction triage | `task inventory` |
 | `reconstruction_inventory.json` | Machine-readable reconstruction triage | `task inventory` |
+| `source_findings.md` | Human-readable source reconstruction review packets using smali and optional JADX context | `task source-findings` |
+| `source_findings.json` | Machine-readable source reconstruction review packets | `task source-findings` |
+| `jadx_decompiled/` | Java-like source tree for reading and navigation | `task jadx` |
 | `tik_tok_report.json` | Machine-readable Androguard structured report for the bundled TikTok sample | `task analyze` |
 
 ## Notes
 
 - `privacy_assessment_report.md` is the report artifact. The other files are evidence, prompt, or triage material.
-- `tik_tok_report.json`, APK files, and decompiled trees are treated as generated/local artifacts by `.gitignore`.
-- For another APK, pass `APK=...`, `REPORT=...`, `DECOMPILE_DIR=...`, `INVENTORY=...`, and `REPORT_MD=...` to the Taskfile targets.
+- `tik_tok_report.json`, APK files, `source_findings.json`, and decompiled source trees are treated as generated/local artifacts by `.gitignore`.
+- `source_findings.md` is suitable to commit when it is small enough to review and useful for the report.
+- For another APK, pass `APK=...`, `REPORT=...`, `DECOMPILE_DIR=...`, `JADX_DIR=...`, `INVENTORY=...`, and `REPORT_MD=...` to the Taskfile targets.

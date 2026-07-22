@@ -7,7 +7,7 @@ Bring this repository to a publishable state for Android APK privacy assessments
 The work has two evidence paths:
 
 1. Androguard analysis: produce structured APK metadata, permissions, exported components, and suspicious API references.
-2. Source reconstruction: turn privacy-relevant decompiled smali/resources into readable source-level evidence.
+2. Source reconstruction: turn privacy-relevant apktool smali/resources and optional JADX Java-like output into readable source-level evidence.
 
 The report should combine both paths, with every important claim linked back to a concrete artifact.
 
@@ -16,6 +16,7 @@ The report should combine both paths, with every important claim linked back to 
 - APK: `TikTok_39.2.1_APKPure.apk` at about 435 MB.
 - Static report: `tik_tok_report.json` exists for TikTok `39.2.1`, package `com.zhiliaoapp.musically`.
 - Decompiled tree: `tiktok_decompiled/` exists at about 4.5 GB.
+- JADX output is optional and should be generated into `jadx_decompiled/` with `task jadx` when `jadx` is installed.
 - Decompiled corpus size: about 350,641 files, including about 331,014 `.smali` files across 54 smali roots.
 - Decompiled assets/resources: about 423 asset files, 18,532 resource files, and 471 native library files.
 - Existing LLM narrative: `llm_analysis.md` exists but has been superseded by the prompted report path.
@@ -73,7 +74,9 @@ Remaining Path 1 work is polish rather than a blocker:
 
 **Milestone 1 status:** in progress.
 
-The inventory and shortlist exist, but the publishable source-evidence layer still needs manual reconstruction, pseudocode, line citations, confidence labels, and links back to report findings.
+The inventory, shortlist, and source-finding packet generator exist. The publishable source-evidence layer still needs manual reconstruction, pseudocode, confidence labels, and links back to report findings.
+
+JADX is now the preferred reading layer for Java/Kotlin-like app logic when available. apktool smali remains the evidence layer for line-cited claims.
 
 ## Outstanding Work
 
@@ -91,7 +94,8 @@ The inventory and shortlist exist, but the publishable source-evidence layer sti
 - Identify obfuscated packages versus recognizable third-party and TikTok/ByteDance packages.
 - Rank files by privacy-relevant keyword hits.
 - Create a reviewed shortlist of classes to reconstruct first.
-- Decide whether to add JADX output as a second reconstruction input; `jadx` is not currently available on this machine.
+- Generate optional JADX Java-like source with `task jadx` when `jadx` is installed.
+- Generate source reconstruction review packets with `task source-findings`.
 
 ### 3. Reconstruct Privacy-Relevant Source Slices
 
@@ -111,6 +115,7 @@ Initial slices:
 Each reconstructed slice should include:
 
 - Original smali file path and line references.
+- JADX source path and readable Java-like context when available.
 - Decompiled or reconstructed readable code/pseudocode.
 - Explanation of the data touched.
 - Confidence level and unresolved ambiguity.

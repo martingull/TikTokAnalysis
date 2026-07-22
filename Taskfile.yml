@@ -4,8 +4,11 @@ vars:
   APK: '{{.APK | default "TikTok_39.2.1_APKPure.apk"}}'
   REPORT: '{{.REPORT | default "tik_tok_report.json"}}'
   DECOMPILE_DIR: '{{.DECOMPILE_DIR | default "tiktok_decompiled"}}'
+  JADX_DIR: '{{.JADX_DIR | default "jadx_decompiled"}}'
   INVENTORY: '{{.INVENTORY | default "reconstruction_inventory.json"}}'
   INVENTORY_MD: '{{.INVENTORY_MD | default "reconstruction_inventory.md"}}'
+  SOURCE_FINDINGS: '{{.SOURCE_FINDINGS | default "source_findings.json"}}'
+  SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD | default "source_findings.md"}}'
   REPORT_MD: '{{.REPORT_MD | default "privacy_assessment_report.md"}}'
   EVIDENCE_MD: '{{.EVIDENCE_MD | default "privacy_evidence_brief.md"}}'
   PROMPT_MD: '{{.PROMPT_MD | default "privacy_report_prompt_payload.md"}}'
@@ -32,7 +35,7 @@ tasks:
       - sh: test -x "{{.PYTHON}}"
         msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py'
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py'
 
   test:
     desc: Run the local unit tests
@@ -107,6 +110,16 @@ tasks:
     cmds:
       - apktool d "{{.APK}}" -o "{{.DECOMPILE_DIR}}" -f
 
+  jadx:
+    desc: Decompile APK={{.APK}} into JADX_DIR={{.JADX_DIR}} with JADX Java-like source
+    preconditions:
+      - sh: command -v jadx
+        msg: jadx is required for Java-like reconstruction. Install jadx, for example with `brew install jadx` on macOS.
+      - sh: test -f "{{.APK}}"
+        msg: APK file not found. Set APK=/path/to/app.apk.
+    cmds:
+      - jadx -d "{{.JADX_DIR}}" "{{.APK}}"
+
   corpus-stats:
     desc: Summarize the decompiled corpus size for reconstruction planning
     preconditions:
@@ -158,6 +171,21 @@ tasks:
     cmds:
       - '"{{.PYTHON}}" reconstruction_inventory.py "{{.DECOMPILE_DIR}}" -o "{{.INVENTORY}}" -m "{{.INVENTORY_MD}}"'
 
+  source-findings:
+    desc: Build source reconstruction review packets from INVENTORY={{.INVENTORY}}
+    preconditions:
+      - sh: test -d "{{.DECOMPILE_DIR}}"
+        msg: Decompiled directory not found. Run task decompile first or set DECOMPILE_DIR=/path/to/decompiled.
+      - sh: test -f "{{.INVENTORY}}"
+        msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
+    cmds:
+      - |
+        if test -d "{{.JADX_DIR}}"; then
+          "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" -j "{{.JADX_DIR}}" -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
+        else
+          "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
+        fi
+
   report-draft:
     desc: Generate a prompted privacy report from REPORT={{.REPORT}} and INVENTORY={{.INVENTORY}}
     preconditions:
@@ -201,6 +229,13 @@ tasks:
           DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
           INVENTORY: '{{.INVENTORY}}'
           INVENTORY_MD: '{{.INVENTORY_MD}}'
+      - task: source-findings
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          JADX_DIR: '{{.JADX_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
       - task: report-draft
         vars:
           REPORT: '{{.REPORT}}'

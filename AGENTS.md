@@ -11,6 +11,8 @@ The final deliverable is a publishable report. Claims in that report must be tra
 - Reviewed reconstructed source or pseudocode derived from the decompiled files.
 - Explicitly labeled dynamic/runtime analysis, if added later.
 
+The product direction is a repeatable CLI tool, similar in spirit to `rectool`. Use Codex or VS Code Codex for planning, review, reconstruction guidance, and report drafting, but keep executable workflow in Taskfile targets and Python scripts so the analysis can be reproduced outside a chat session.
+
 ## Current Inputs
 
 - Sample APK: `TikTok_39.2.1_APKPure.apk`
@@ -32,10 +34,12 @@ task test
 task path1-check
 task analyze
 task decompile
+task jadx
 task dashboard
 task llm
 task corpus-stats
 task privacy-keywords
+task source-findings
 task report-evidence
 task report-draft
 ```
@@ -62,6 +66,7 @@ When regenerating analysis outputs, do not overwrite manual report drafts unless
 - Generate `privacy_evidence_brief.md` deterministically before creating prompted prose.
 - Mark prompted prose as draft analysis until checked against source evidence.
 - Prefer file path and line references from `tiktok_decompiled/` for publishable findings.
+- Use JADX output as the reading layer when available, but verify publishable claims against apktool smali line references.
 - Keep reconstruction focused on privacy-relevant classes, SDKs, and call paths rather than attempting to fully restore the full application.
 
 ## Reconstruction Priorities

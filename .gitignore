@@ -17,6 +17,8 @@ __pycache__/
 *.apk
 *_Decompiled/
 tiktok_decompiled/
+jadx_decompiled/
+source_findings.json
 tik_tok_report*.json*
 metadata.json
 llm_analysis.md
