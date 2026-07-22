@@ -105,8 +105,7 @@ JADX is now the preferred reading layer for Java/Kotlin-like app logic when avai
 
 ### 1. Stabilize the Analysis Pipeline
 
-- Keep `dashboard.py` compatible with current and legacy Androguard report schemas.
-- Keep `apk_analysis.py` accepting CLI arguments for APK and output paths.
+- Keep `dashboard.py` compatible with the current normalized Androguard report schema.
 - Keep verbose Androguard logging opt-in through `--verbose`.
 - Maintain normalized report field names so downstream tools do not need special-case mappings.
 - Keep regression checks for report loading, dashboard normalization, and evidence-brief rendering.

@@ -145,7 +145,6 @@ Security analysis is a future third path. The repo does not currently define a `
 ## Main Files
 
 - `androguard_analysis.py` - creates a structured APK report from Androguard.
-- `apk_analysis.py` - decompiles an APK with apktool and scans smali for privacy-relevant patterns.
 - `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
 - `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
 - `reviewed_source_notes.md` - hand-reviewed notes for selected source packets.

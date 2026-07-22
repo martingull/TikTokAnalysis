@@ -40,7 +40,7 @@ tasks:
       - sh: test -x "{{.PYTHON}}"
         msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py dynamic_validation_plan.py'
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py dashboard.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py dynamic_validation_plan.py'
 
   test:
     desc: Run the local unit tests
@@ -337,18 +337,3 @@ tasks:
           REPORT: '{{.REPORT}}'
           INVENTORY: '{{.INVENTORY}}'
           REPORT_MD: '{{.REPORT_MD}}'
-
-  apk-scan:
-    desc: Run apk_analysis.py decompile and smali keyword scan for APK={{.APK}}
-    preconditions:
-      - sh: command -v apktool
-        msg: apktool is required by apk_analysis.py.
-      - sh: test -f "{{.APK}}"
-        msg: APK file not found. Set APK=/path/to/app.apk.
-    cmds:
-      - '"{{.PYTHON}}" apk_analysis.py "{{.APK}}" -d "{{.DECOMPILE_DIR}}" -o apk_code_scan.json'
-
-  run:
-    desc: Run the placeholder Python entrypoint
-    cmds:
-      - '"{{.PYTHON}}" main.py'
