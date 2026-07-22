@@ -26,7 +26,6 @@ reconstruction_inventory.json
 source_findings.json
 tik_tok_report*.json*
 metadata.json
-llm_analysis.md
 
 # OS/editor noise
 .DS_Store

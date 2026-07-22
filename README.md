@@ -135,7 +135,6 @@ Security analysis is a future third path. The repo does not currently define a `
 - `report_builder.py` - creates a deterministic evidence brief.
 - `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
 - `dashboard.py` - renders a terminal dashboard for the structured report.
-- `llm_analysis.py` - optional OpenAI-assisted analysis.
 - `ROADMAP.md` - current project roadmap and definition of done.
 - `AGENTS.md` - working instructions for future agents.
 

@@ -18,7 +18,6 @@ The product direction is a repeatable CLI tool, similar in spirit to `rectool`. 
 - Sample APK: `TikTok_39.2.1_APKPure.apk`
 - Primary static report: `tik_tok_report.json`
 - Decompiled tree: `tiktok_decompiled/`
-- Existing narrative draft: `llm_analysis.md`
 - Existing dashboard renderer: `dashboard.py`
 
 There is also an older or duplicate TikTok decompiled tree, `TikTok_39.2.1_APKPure_Decompiled/`. Prefer `tiktok_decompiled/` for the bundled sample unless a task explicitly says otherwise. For other apps, set `APK=...`, `REPORT=...`, and `DECOMPILE_DIR=...`.
@@ -39,7 +38,6 @@ task decompile
 task jadx
 task jadx-class
 task dashboard
-task llm
 task corpus-stats
 task privacy-keywords
 task source-findings

@@ -42,7 +42,6 @@ The user-facing CLI surface should stay granular:
 - For large APKs, targeted JADX with `task jadx-class JADX_CLASS=...` is preferred over full-tree generation.
 - Decompiled corpus size: about 350,641 files, including about 331,014 `.smali` files across 54 smali roots.
 - Decompiled assets/resources: about 423 asset files, 18,532 resource files, and 471 native library files.
-- Existing LLM narrative: `llm_analysis.md` exists but has been superseded by the prompted report path.
 - Dashboard: `dashboard.py` exists, but its expected JSON keys do not match the current `tik_tok_report.json` shape.
 
 Current `tik_tok_report.json` highlights:

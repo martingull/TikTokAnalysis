@@ -37,7 +37,7 @@ tasks:
       - sh: test -x "{{.PYTHON}}"
         msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py'
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py'
 
   test:
     desc: Run the local unit tests
@@ -103,16 +103,6 @@ tasks:
         vars:
           REPORT: '{{.REPORT}}'
       - '"{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -o "{{.EVIDENCE_MD}}"'
-
-  llm:
-    desc: Generate an LLM-assisted report from REPORT={{.REPORT}} using OpenAI SDK env vars
-    preconditions:
-      - sh: test -f "{{.REPORT}}"
-        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
-      - sh: test -f .env
-        msg: .env not found. Create it from .env.template with OpenAI SDK settings.
-    cmds:
-      - '"{{.PYTHON}}" llm_analysis.py -i "{{.REPORT}}" -o llm_analysis.md --model "{{.MODEL}}"'
 
   decompile:
     desc: Decompile APK={{.APK}} into DECOMPILE_DIR={{.DECOMPILE_DIR}} with apktool
