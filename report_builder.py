@@ -71,6 +71,63 @@ def normalize_permission_api_entry(data):
     }
 
 
+def source_packet_rows(source_findings, limit=8):
+    rows = []
+    for finding in (source_findings or {}).get("findings", [])[:limit]:
+        evidence_lines = [
+            f"{context.get('line')}:{context.get('category')}:{context.get('keyword')}"
+            for context in finding.get("smali_context", [])[:3]
+        ]
+        rows.append(
+            [
+                finding.get("priority", ""),
+                finding.get("smali_file", ""),
+                finding.get("class_name") or "unknown",
+                finding.get("jadx_file") or "not supplied",
+                ", ".join(finding.get("category_counts", {}).keys()),
+                ", ".join(evidence_lines) or "none",
+            ]
+        )
+    return rows
+
+
+def source_packet_excerpt(finding, max_contexts=2, max_jadx=2):
+    lines = [
+        f"#### `{finding.get('smali_file', 'unknown')}`",
+        "",
+        f"- Class: `{finding.get('class_name') or 'unknown'}`",
+        f"- JADX source: `{finding.get('jadx_file') or 'not supplied'}`",
+        f"- Categories: {', '.join(f'`{name}`' for name in finding.get('category_counts', {})) or '`none`'}",
+        "",
+    ]
+
+    smali_contexts = finding.get("smali_context", [])[:max_contexts]
+    if smali_contexts:
+        lines.append("Smali evidence:")
+        for context in smali_contexts:
+            center_line = next(
+                (
+                    row["code"].strip()
+                    for row in context.get("context", [])
+                    if row.get("line") == context.get("line")
+                ),
+                "",
+            )
+            lines.append(
+                f"- Line {context.get('line')}, `{context.get('category')}`, `{context.get('keyword')}`: `{short_text(center_line)}`"
+            )
+        lines.append("")
+
+    jadx_matches = finding.get("jadx_matches", [])[:max_jadx]
+    if jadx_matches:
+        lines.append("JADX reading context:")
+        for match in jadx_matches:
+            lines.append(f"- Line {match.get('line')}: `{short_text(match.get('code', ''))}`")
+        lines.append("")
+
+    return lines
+
+
 def certificate_summary(report):
     certificate = report.get("certificate_info", {})
     certificates = certificate.get("certificates", [])
@@ -101,7 +158,14 @@ def add_table(lines, headers, rows):
         lines.append("| " + " | ".join(str(value).replace("|", "\\|") for value in row) + " |")
 
 
-def build_report(analysis, inventory=None):
+def short_text(value, limit=280):
+    text = " ".join(str(value or "").split())
+    if len(text) <= limit:
+        return text
+    return text[: limit - 3].rstrip() + "..."
+
+
+def build_report(analysis, inventory=None, source_findings=None):
     info = metadata(analysis)
     counts = component_counts(analysis)
     exported_components = unique_items(analysis.get("exported_components", []))
@@ -116,6 +180,7 @@ def build_report(analysis, inventory=None):
     cert = certificate_summary(analysis)
     dangerous = dangerous_permissions(info["permissions"])
     selected_slices = (inventory or {}).get("selected_source_slices", [])
+    source_packets = (source_findings or {}).get("findings", [])
 
     lines = [
         f"# Android APK Privacy Assessment: {info['app_name']}",
@@ -141,6 +206,7 @@ def build_report(analysis, inventory=None):
         "- Declared permission: capability appears in the manifest; this does not prove collection.",
         "- Static API reference: bytecode or smali references an API; this does not prove a user flow triggers it.",
         "- Source reconstruction: a smali class has been selected for readable reconstruction because it supports a finding.",
+        "- Source finding packet: line-cited smali evidence and optional JADX reading context have been extracted for review.",
         "- Runtime behavior: not assessed in this milestone.",
         "",
         "## App Surface",
@@ -259,6 +325,24 @@ def build_report(analysis, inventory=None):
     else:
         lines.append("No reconstruction inventory was supplied.")
 
+    lines.extend(["", "## Source Finding Packets", ""])
+    lines.append(evidence_grade("line-cited static source evidence", "apktool smali with optional JADX context", "medium"))
+    lines.append("")
+    packet_rows = source_packet_rows(source_findings)
+    if packet_rows:
+        add_table(
+            lines,
+            ["Priority", "Smali file", "Class", "JADX source", "Categories", "Evidence lines"],
+            packet_rows,
+        )
+        lines.append("")
+        lines.append("The excerpts below are review aids. Publishable claims still need human confirmation of control flow and triggerability.")
+        lines.append("")
+        for finding in source_packets[:3]:
+            lines.extend(source_packet_excerpt(finding))
+    else:
+        lines.append("No source finding packets were supplied. Run `task source-findings` after `task inventory` to add line-cited source context.")
+
     lines.extend([
         "",
         "## Methodology",
@@ -266,7 +350,8 @@ def build_report(analysis, inventory=None):
         "1. Androguard parsed the APK metadata, manifest-derived surfaces, and selected bytecode API references.",
         "2. apktool output was scanned for privacy-relevant smali keywords.",
         "3. The reconstruction inventory selected a small set of high-signal source slices from a very large decompiled corpus.",
-        "4. Findings were labeled by evidence type to avoid overstating static analysis as runtime proof.",
+        "4. Source finding packets added line-cited smali context and optional JADX reading context where available.",
+        "5. Findings were labeled by evidence type to avoid overstating static analysis as runtime proof.",
         "",
         "## Limitations",
         "",
@@ -288,12 +373,14 @@ def main():
     parser = argparse.ArgumentParser(description="Build an evidence-labeled APK privacy report from structured analysis artifacts.")
     parser.add_argument("-a", "--analysis", default="apk_analysis_report.json", help="Androguard JSON report path")
     parser.add_argument("-i", "--inventory", default=None, help="Optional reconstruction inventory JSON path")
+    parser.add_argument("-s", "--source-findings", default=None, help="Optional source findings JSON path")
     parser.add_argument("-o", "--output", default="privacy_assessment_report.md", help="Markdown report output path")
     args = parser.parse_args()
 
     analysis = load_json(args.analysis)
     inventory = load_json(args.inventory) if args.inventory else None
-    Path(args.output).write_text(build_report(analysis, inventory))
+    source_findings = load_json(args.source_findings) if args.source_findings else None
+    Path(args.output).write_text(build_report(analysis, inventory, source_findings))
     print(f"Privacy assessment report saved to: {args.output}")
 
 

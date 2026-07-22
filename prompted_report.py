@@ -9,10 +9,11 @@ from promps import PRIVACY_PROMPT
 from report_builder import build_report, load_json
 
 
-def build_evidence_brief(analysis_path, inventory_path):
+def build_evidence_brief(analysis_path, inventory_path, source_findings_path=None):
     analysis = load_json(analysis_path)
     inventory = load_json(inventory_path) if inventory_path else None
-    return build_report(analysis, inventory)
+    source_findings = load_json(source_findings_path) if source_findings_path else None
+    return build_report(analysis, inventory, source_findings)
 
 
 def build_messages(evidence_brief):
@@ -56,6 +57,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate a prompted, audience-readable APK privacy report from structured evidence.")
     parser.add_argument("-a", "--analysis", default="apk_analysis_report.json", help="Androguard JSON report path")
     parser.add_argument("-i", "--inventory", default=None, help="Optional reconstruction inventory JSON path")
+    parser.add_argument("-s", "--source-findings", default=None, help="Optional source findings JSON path")
     parser.add_argument("-o", "--output", default="privacy_assessment_report.md", help="Markdown report output path")
     parser.add_argument("--evidence-output", default="privacy_evidence_brief.md", help="Deterministic evidence brief output path")
     parser.add_argument("--prompt-output", default="privacy_report_prompt_payload.md", help="Prompt payload output path")
@@ -67,7 +69,7 @@ def main():
     load_dotenv()
 
     model = args.model or os.getenv("LLM_MODEL") or os.getenv("OPENAI_MODEL") or DEFAULT_MODEL
-    evidence_brief = build_evidence_brief(args.analysis, args.inventory)
+    evidence_brief = build_evidence_brief(args.analysis, args.inventory, args.source_findings)
     Path(args.evidence_output).write_text(evidence_brief)
     messages = build_messages(evidence_brief)
     Path(args.prompt_output).write_text(render_prompt_payload(messages))

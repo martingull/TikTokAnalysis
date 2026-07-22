@@ -79,6 +79,45 @@ class Path1SchemaTest(unittest.TestCase):
         self.assertIn("| android.permission.CAMERA | True |", report)
         self.assertIn("| android.permission.ACCESS_FINE_LOCATION | False |", report)
 
+    def test_report_builder_includes_source_finding_packets_when_supplied(self):
+        source_findings = {
+            "findings": [
+                {
+                    "priority": 1,
+                    "smali_file": "smali_classes1/com/example/Thing.smali",
+                    "class_name": "Lcom/example/Thing",
+                    "jadx_file": "jadx_decompiled/sources/com/example/Thing.java",
+                    "category_counts": {"command_execution": 1},
+                    "smali_context": [
+                        {
+                            "line": 12,
+                            "category": "command_execution",
+                            "keyword": "Runtime",
+                            "context": [
+                                {
+                                    "line": 12,
+                                    "code": "invoke-virtual {v0}, Ljava/lang/Runtime;->exec(Ljava/lang/String;)Ljava/lang/Process;",
+                                }
+                            ],
+                        }
+                    ],
+                    "jadx_matches": [
+                        {
+                            "line": 7,
+                            "code": 'Runtime.getRuntime().exec("id");',
+                        }
+                    ],
+                }
+            ]
+        }
+
+        report = build_report(SAMPLE_ANALYSIS, source_findings=source_findings)
+
+        self.assertIn("## Source Finding Packets", report)
+        self.assertIn("smali_classes1/com/example/Thing.smali", report)
+        self.assertIn("Line 12", report)
+        self.assertIn("Runtime.getRuntime().exec", report)
+
 
 if __name__ == "__main__":
     unittest.main()

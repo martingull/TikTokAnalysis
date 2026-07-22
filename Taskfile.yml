@@ -227,7 +227,12 @@ tasks:
       - sh: test -f .env
         msg: .env not found. Create it from .env.template with OpenAI SDK settings.
     cmds:
-      - '"{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"'
+      - |
+        if test -f "{{.SOURCE_FINDINGS}}"; then
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+        else
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+        fi
 
   report-prompt:
     desc: Generate the prompted report payload locally without calling a model
@@ -237,7 +242,12 @@ tasks:
       - sh: test -f "{{.INVENTORY}}"
         msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
     cmds:
-      - '"{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run'
+      - |
+        if test -f "{{.SOURCE_FINDINGS}}"; then
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
+        else
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
+        fi
 
   report-evidence:
     desc: Generate the deterministic evidence brief without using an LLM
@@ -247,7 +257,12 @@ tasks:
       - sh: test -f "{{.INVENTORY}}"
         msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
     cmds:
-      - '"{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.EVIDENCE_MD}}"'
+      - |
+        if test -f "{{.SOURCE_FINDINGS}}"; then
+          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.EVIDENCE_MD}}"
+        else
+          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.EVIDENCE_MD}}"
+        fi
 
   milestone:
     desc: Run first milestone artifacts from REPORT={{.REPORT}} and DECOMPILE_DIR={{.DECOMPILE_DIR}}

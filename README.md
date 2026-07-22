@@ -102,6 +102,8 @@ For source reconstruction, JADX is the reading layer and apktool smali is the ev
 task report-evidence REPORT=app_report.json INVENTORY=app_inventory.json EVIDENCE_MD=app_evidence_brief.md
 ```
 
+When `source_findings.json` is present, `task report-draft`, `task report-prompt`, and `task report-evidence` include the line-cited source packets in the evidence brief automatically.
+
 To generate the exact prompt payload locally without sending data to a model:
 
 ```bash

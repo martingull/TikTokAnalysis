@@ -139,6 +139,7 @@ The strongest publishable claims at this stage are capability and code-presence 
 - Declared permission: capability appears in the manifest; this does not prove collection.
 - Static API reference: bytecode or smali references an API; this does not prove a user flow triggers it.
 - Source reconstruction: a smali class has been selected for readable reconstruction because it supports a finding.
+- Source finding packet: line-cited smali evidence and optional JADX reading context have been extracted for review.
 - Runtime behavior: not assessed in this milestone.
 
 ## App Surface
@@ -264,12 +265,65 @@ Only the first 25 exported components are shown here; total exported components:
 | smali_classes18/com/bytedance/android/live/wallet/WalletExchange.smali | Lcom/bytedance/android/live/wallet/WalletExchange | command_execution, local_storage | 13 |
 | smali_classes19/com/ss/android/vesdk/audio/TEAudioRecord.smali | Lcom/ss/android/vesdk/audio/TEAudioRecord | camera_microphone | 154 |
 
+## Source Finding Packets
+
+**Evidence grade:** line-cited static source evidence. **Source:** apktool smali with optional JADX context. **Confidence:** medium.
+
+| Priority | Smali file | Class | JADX source | Categories | Evidence lines |
+| --- | --- | --- | --- | --- | --- |
+| 1 | smali_classes17/com/google/android/gms/ads/identifier/AdvertisingIdClient.smali | Lcom/google/android/gms/ads/identifier/AdvertisingIdClient | jadx_decompiled/sources/com/google/android/gms/ads/identifier/AdvertisingIdClient.java | identifiers, network_telemetry | 1:identifiers:AdvertisingId, 38:identifiers:AdvertisingId, 53:identifiers:AdvertisingId |
+| 2 | smali_classes17/com/bytedance/helios/statichook/config/ApiHookConfig.smali | Lcom/bytedance/helios/statichook/config/ApiHookConfig | not supplied | camera_microphone, contacts_accounts, identifiers, installed_apps, location, network_telemetry | 50:identifiers:getDeviceId, 193:network_telemetry:okhttp, 229:network_telemetry:okhttp |
+| 3 | smali_classes40/com/byted/cast/capture/audio/AudioRecorder$AudioThread.smali | Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread | not supplied | camera_microphone | 1:camera_microphone:AudioRecord, 8:camera_microphone:AudioRecord, 18:camera_microphone:AudioRecord |
+| 4 | smali_classes17/X/0eGv.1.smali | LX/0eGv | not supplied | camera_microphone, contacts_accounts, dynamic_loading, identifiers, installed_apps, local_storage, location, network_telemetry | 7:contacts_accounts:AccountManager, 59:contacts_accounts:AccountManager, 63:contacts_accounts:getAccounts |
+| 5 | smali_classes16/X/0awA.2.smali | LX/0awA | not supplied | installed_apps | 239:installed_apps:queryIntentActivities, 464:installed_apps:queryIntentActivities |
+| 6 | smali_classes17/X/0dMp.1.smali | LX/0dMp | not supplied | local_storage | 144:local_storage:SharedPreferences, 610:local_storage:SharedPreferences, 618:local_storage:SharedPreferences |
+| 7 | smali_classes17/com/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener.smali | Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener | not supplied | network_telemetry | 1:network_telemetry:okhttp, 17:network_telemetry:okhttp, 54:network_telemetry:okhttp |
+| 8 | smali_classes11/X/0PuX.2.smali | LX/0PuX | not supplied | dynamic_loading | 111:dynamic_loading:ClassLoader, 119:dynamic_loading:ClassLoader, 252:dynamic_loading:ClassLoader |
+
+The excerpts below are review aids. Publishable claims still need human confirmation of control flow and triggerability.
+
+#### `smali_classes17/com/google/android/gms/ads/identifier/AdvertisingIdClient.smali`
+
+- Class: `Lcom/google/android/gms/ads/identifier/AdvertisingIdClient`
+- JADX source: `jadx_decompiled/sources/com/google/android/gms/ads/identifier/AdvertisingIdClient.java`
+- Categories: `identifiers`, `network_telemetry`
+
+Smali evidence:
+- Line 1, `identifiers`, `AdvertisingId`: `.class public Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;`
+- Line 38, `identifiers`, `AdvertisingId`: `iput-object v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZLLL:Ljava/lang/Object;`
+
+JADX reading context:
+- Line 34: `public class AdvertisingIdClient {`
+- Line 68: `public AdvertisingIdClient(boolean z, Context context, boolean z2) {`
+
+#### `smali_classes17/com/bytedance/helios/statichook/config/ApiHookConfig.smali`
+
+- Class: `Lcom/bytedance/helios/statichook/config/ApiHookConfig`
+- JADX source: `not supplied`
+- Categories: `camera_microphone`, `contacts_accounts`, `identifiers`, `installed_apps`, `location`, `network_telemetry`
+
+Smali evidence:
+- Line 50, `identifiers`, `getDeviceId`: `const-string v0, "This class is used as a dictionary maintains.\nDictionary layout:\n |---- key: API ID, an integer value\n |---- value: {API ID, API name hash code, API related resource id(may be empty), API related resource name(maybe empty), permissions(maybe empty), permis...`
+- Line 193, `network_telemetry`, `okhttp`: `const-string v7, "okhttp3.OkHttpClient$Builder.build"`
+
+#### `smali_classes40/com/byted/cast/capture/audio/AudioRecorder$AudioThread.smali`
+
+- Class: `Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread`
+- JADX source: `not supplied`
+- Categories: `camera_microphone`
+
+Smali evidence:
+- Line 1, `camera_microphone`, `AudioRecord`: `.class public Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread;`
+- Line 8, `camera_microphone`, `AudioRecord`: `value = Lcom/byted/cast/capture/audio/AudioRecorder;`
+
+
 ## Methodology
 
 1. Androguard parsed the APK metadata, manifest-derived surfaces, and selected bytecode API references.
 2. apktool output was scanned for privacy-relevant smali keywords.
 3. The reconstruction inventory selected a small set of high-signal source slices from a very large decompiled corpus.
-4. Findings were labeled by evidence type to avoid overstating static analysis as runtime proof.
+4. Source finding packets added line-cited smali context and optional JADX reading context where available.
+5. Findings were labeled by evidence type to avoid overstating static analysis as runtime proof.
 
 ## Limitations
 
