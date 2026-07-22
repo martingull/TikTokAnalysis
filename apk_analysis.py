@@ -1,9 +1,8 @@
+import argparse
+import json
 import os
 import subprocess
 import xml.etree.ElementTree as ET
-
-APK_FILE = "TikTok_39.2.1_APKPure.apk"
-DECOMPILE_DIR = "tiktok_decompiled"
 
 # Keywords to look for in smali files
 DATA_ACCESS_KEYWORDS = [
@@ -11,6 +10,8 @@ DATA_ACCESS_KEYWORDS = [
     'getLastKnownLocation', 'getLatitude', 'getLongitude',
     'getAccounts', 'getInstalledPackages', 'getMacAddress',
     'getAdvertisingIdInfo', 'getInputStream', 'System.loadLibrary',
+    'DexClassLoader', 'PathClassLoader', 'Runtime;->exec',
+    'ProcessBuilder;->start', 'SharedPreferences',
 ]
 
 def run_apktool(apk_file, output_dir):
@@ -49,18 +50,43 @@ def search_smali_code(directory, keywords):
     return findings
 
 def main():
-    run_apktool(APK_FILE, DECOMPILE_DIR)
+    parser = argparse.ArgumentParser(description="Decompile an APK with apktool and scan smali for privacy-relevant API references.")
+    parser.add_argument("apk", help="Path to the APK file")
+    parser.add_argument("-d", "--decompile-dir", default="apk_decompiled", help="Directory for apktool output")
+    parser.add_argument("-o", "--output", default="apk_code_scan.json", help="JSON output path for scan findings")
+    parser.add_argument("--skip-decompile", action="store_true", help="Scan an existing decompiled directory without running apktool")
+    parser.add_argument("--keyword", action="append", dest="keywords", help="Additional keyword to scan for; can be passed multiple times")
+    args = parser.parse_args()
 
-    manifest_path = os.path.join(DECOMPILE_DIR, "AndroidManifest.xml")
+    keywords = DATA_ACCESS_KEYWORDS + (args.keywords or [])
+
+    if not args.skip_decompile:
+        run_apktool(args.apk, args.decompile_dir)
+    elif not os.path.isdir(args.decompile_dir):
+        raise SystemExit(f"Decompiled directory not found: {args.decompile_dir}")
+
+    manifest_path = os.path.join(args.decompile_dir, "AndroidManifest.xml")
     permissions = parse_permissions(manifest_path)
     print("\n[+] Permissions Used:")
     for perm in permissions:
         print("  -", perm)
 
-    findings = search_smali_code(DECOMPILE_DIR, DATA_ACCESS_KEYWORDS)
+    findings = search_smali_code(args.decompile_dir, keywords)
     print("\n[+] Data Access Code Patterns Found:")
     for item in findings:
         print(f"  - {item['keyword']} in {item['file']} (Line {item['line']}): {item['code']}")
+
+    report = {
+        "apk_path": args.apk,
+        "decompile_dir": args.decompile_dir,
+        "permissions": permissions,
+        "keywords": keywords,
+        "finding_count": len(findings),
+        "findings": findings,
+    }
+    with open(args.output, "w") as f:
+        json.dump(report, f, indent=2)
+    print(f"\nScan report saved to: {args.output}")
 
 if __name__ == "__main__":
     main()

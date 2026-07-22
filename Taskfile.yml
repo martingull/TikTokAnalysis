@@ -4,6 +4,13 @@ vars:
   APK: '{{.APK | default "TikTok_39.2.1_APKPure.apk"}}'
   REPORT: '{{.REPORT | default "tik_tok_report.json"}}'
   DECOMPILE_DIR: '{{.DECOMPILE_DIR | default "tiktok_decompiled"}}'
+  INVENTORY: '{{.INVENTORY | default "reconstruction_inventory.json"}}'
+  INVENTORY_MD: '{{.INVENTORY_MD | default "reconstruction_inventory.md"}}'
+  REPORT_MD: '{{.REPORT_MD | default "privacy_assessment_report.md"}}'
+  EVIDENCE_MD: '{{.EVIDENCE_MD | default "privacy_evidence_brief.md"}}'
+  PROMPT_MD: '{{.PROMPT_MD | default "privacy_report_prompt_payload.md"}}'
+  MODEL: '{{.MODEL | default "gpt-5.5"}}'
+  PYTHON: '{{.PYTHON | default ".venv/bin/python"}}'
 
 tasks:
   default:
@@ -21,8 +28,37 @@ tasks:
 
   check:
     desc: Compile the project Python scripts
+    preconditions:
+      - sh: test -x "{{.PYTHON}}"
+        msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - uv run python -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py llm_analysis.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py'
+
+  test:
+    desc: Run the local unit tests
+    preconditions:
+      - sh: test -x "{{.PYTHON}}"
+        msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
+    cmds:
+      - '"{{.PYTHON}}" -m unittest discover -s tests'
+
+  path1-check:
+    desc: Verify the Androguard structured-analysis path against REPORT={{.REPORT}}
+    cmds:
+      - task: check
+        vars:
+          PYTHON: '{{.PYTHON}}'
+      - task: test
+        vars:
+          PYTHON: '{{.PYTHON}}'
+      - task: dashboard
+        vars:
+          REPORT: '{{.REPORT}}'
+
+  roadmap:
+    desc: Print the project roadmap
+    cmds:
+      - sed -n '1,260p' ROADMAP.md
 
   analyze:
     desc: Generate an Androguard JSON report from APK={{.APK}}
@@ -30,7 +66,7 @@ tasks:
       - sh: test -f "{{.APK}}"
         msg: APK file not found. Set APK=/path/to/app.apk.
     cmds:
-      - uv run python androguard_analysis.py "{{.APK}}" -o "{{.REPORT}}"
+      - '"{{.PYTHON}}" androguard_analysis.py "{{.APK}}" -o "{{.REPORT}}"'
 
   dashboard:
     desc: Render the terminal dashboard for REPORT={{.REPORT}}
@@ -38,7 +74,7 @@ tasks:
       - sh: test -f "{{.REPORT}}"
         msg: Report file not found. Run task analyze first or set REPORT=/path/to/report.json.
     cmds:
-      - uv run python dashboard.py "{{.REPORT}}"
+      - '"{{.PYTHON}}" dashboard.py "{{.REPORT}}"'
 
   report:
     desc: Generate the Androguard report and render it in the dashboard
@@ -52,14 +88,14 @@ tasks:
           REPORT: '{{.REPORT}}'
 
   llm:
-    desc: Generate llm_analysis.md from tik_tok_report.json using Azure OpenAI env vars
+    desc: Generate an LLM-assisted report from REPORT={{.REPORT}} using OpenAI SDK env vars
     preconditions:
-      - sh: test -f tik_tok_report.json
-        msg: tik_tok_report.json not found. Run task analyze first with the default REPORT.
+      - sh: test -f "{{.REPORT}}"
+        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
       - sh: test -f .env
-        msg: .env not found. Create it from .env.template with Azure OpenAI settings.
+        msg: .env not found. Create it from .env.template with OpenAI SDK settings.
     cmds:
-      - uv run python llm_analysis.py
+      - '"{{.PYTHON}}" llm_analysis.py -i "{{.REPORT}}" -o llm_analysis.md --model "{{.MODEL}}"'
 
   decompile:
     desc: Decompile APK={{.APK}} into DECOMPILE_DIR={{.DECOMPILE_DIR}} with apktool
@@ -71,17 +107,117 @@ tasks:
     cmds:
       - apktool d "{{.APK}}" -o "{{.DECOMPILE_DIR}}" -f
 
+  corpus-stats:
+    desc: Summarize the decompiled corpus size for reconstruction planning
+    preconditions:
+      - sh: test -d "{{.DECOMPILE_DIR}}"
+        msg: Decompiled directory not found. Run task decompile first or set DECOMPILE_DIR=/path/to/decompiled.
+    cmds:
+      - du -sh "{{.DECOMPILE_DIR}}"
+      - find "{{.DECOMPILE_DIR}}" -maxdepth 1 -type d -name 'smali*' | wc -l
+      - find "{{.DECOMPILE_DIR}}" -type f -name '*.smali' | wc -l
+      - find "{{.DECOMPILE_DIR}}" -type f | wc -l
+      - find "{{.DECOMPILE_DIR}}/lib" -type f | wc -l
+      - find "{{.DECOMPILE_DIR}}/assets" -type f | wc -l
+      - find "{{.DECOMPILE_DIR}}/res" -type f | wc -l
+
+  privacy-keywords:
+    desc: Count privacy and reconstruction keywords in decompiled smali
+    preconditions:
+      - sh: test -d "{{.DECOMPILE_DIR}}"
+        msg: Decompiled directory not found. Run task decompile first or set DECOMPILE_DIR=/path/to/decompiled.
+      - sh: command -v rg
+        msg: ripgrep is required for fast keyword scans.
+    cmds:
+      - |
+        for p in \
+          'getDeviceId' \
+          'getSubscriberId' \
+          'getSimSerialNumber' \
+          'getLastKnownLocation' \
+          'getLatitude' \
+          'getLongitude' \
+          'getAccounts' \
+          'getInstalledPackages' \
+          'getMacAddress' \
+          'getAdvertisingIdInfo' \
+          'System.loadLibrary' \
+          'DexClassLoader' \
+          'Runtime;->exec' \
+          'ProcessBuilder;->start' \
+          'SharedPreferences'; do
+            printf '%s ' "$p"
+            rg -F --count-matches "$p" "{{.DECOMPILE_DIR}}" -g '*.smali' | awk -F: '{s+=$2} END{print s+0}'
+          done
+
+  inventory:
+    desc: Generate reconstruction inventory artifacts from DECOMPILE_DIR={{.DECOMPILE_DIR}}
+    preconditions:
+      - sh: test -d "{{.DECOMPILE_DIR}}"
+        msg: Decompiled directory not found. Run task decompile first or set DECOMPILE_DIR=/path/to/decompiled.
+    cmds:
+      - '"{{.PYTHON}}" reconstruction_inventory.py "{{.DECOMPILE_DIR}}" -o "{{.INVENTORY}}" -m "{{.INVENTORY_MD}}"'
+
+  report-draft:
+    desc: Generate a prompted privacy report from REPORT={{.REPORT}} and INVENTORY={{.INVENTORY}}
+    preconditions:
+      - sh: test -f "{{.REPORT}}"
+        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
+      - sh: test -f "{{.INVENTORY}}"
+        msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
+      - sh: test -f .env
+        msg: .env not found. Create it from .env.template with OpenAI SDK settings.
+    cmds:
+      - '"{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"'
+
+  report-prompt:
+    desc: Generate the prompted report payload locally without calling a model
+    preconditions:
+      - sh: test -f "{{.REPORT}}"
+        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
+      - sh: test -f "{{.INVENTORY}}"
+        msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
+    cmds:
+      - '"{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run'
+
+  report-evidence:
+    desc: Generate the deterministic evidence brief without using an LLM
+    preconditions:
+      - sh: test -f "{{.REPORT}}"
+        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
+      - sh: test -f "{{.INVENTORY}}"
+        msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
+    cmds:
+      - '"{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.EVIDENCE_MD}}"'
+
+  milestone:
+    desc: Run first milestone artifacts from REPORT={{.REPORT}} and DECOMPILE_DIR={{.DECOMPILE_DIR}}
+    cmds:
+      - task: dashboard
+        vars:
+          REPORT: '{{.REPORT}}'
+      - task: inventory
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          INVENTORY_MD: '{{.INVENTORY_MD}}'
+      - task: report-draft
+        vars:
+          REPORT: '{{.REPORT}}'
+          INVENTORY: '{{.INVENTORY}}'
+          REPORT_MD: '{{.REPORT_MD}}'
+
   apk-scan:
-    desc: Run apk_analysis.py decompile and smali keyword scan
+    desc: Run apk_analysis.py decompile and smali keyword scan for APK={{.APK}}
     preconditions:
       - sh: command -v apktool
         msg: apktool is required by apk_analysis.py.
-      - sh: test -f TikTok_39.2.1_APKPure.apk
-        msg: TikTok_39.2.1_APKPure.apk not found. apk_analysis.py currently uses this hardcoded APK name.
+      - sh: test -f "{{.APK}}"
+        msg: APK file not found. Set APK=/path/to/app.apk.
     cmds:
-      - uv run python apk_analysis.py
+      - '"{{.PYTHON}}" apk_analysis.py "{{.APK}}" -d "{{.DECOMPILE_DIR}}" -o apk_code_scan.json'
 
   run:
     desc: Run the placeholder Python entrypoint
     cmds:
-      - uv run python main.py
+      - '"{{.PYTHON}}" main.py'

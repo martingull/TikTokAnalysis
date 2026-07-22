@@ -1,36 +1,39 @@
-import dotenv
-from langchain_openai import AzureChatOpenAI
-from dotenv import dotenv_values
+import argparse
+import os
+
+from dotenv import load_dotenv
+
+from openai_helpers import DEFAULT_MODEL, complete_with_responses
 from promps import PRIVACY_PROMPT
 
-dotenv.load_dotenv()
 
-apk_analysis_file = "./tik_tok_report.json"  # Path to your APK analysis file
+def main():
+    parser = argparse.ArgumentParser(description="Generate an LLM-assisted privacy analysis from an APK JSON report.")
+    parser.add_argument("-i", "--input", default="apk_analysis_report.json", help="APK analysis JSON input path")
+    parser.add_argument("-o", "--output", default="llm_analysis.md", help="Markdown output path")
+    parser.add_argument("--model", default=None, help="OpenAI model name")
+    parser.add_argument("--max-output-tokens", type=int, default=4096, help="Maximum output tokens")
+    args = parser.parse_args()
 
-llm = AzureChatOpenAI(
-    azure_deployment="gpt-4o",
-    api_version="2024-08-01-preview",  # or your api version
-)
+    load_dotenv()
+    model = args.model or os.getenv("LLM_MODEL") or os.getenv("OPENAI_MODEL") or DEFAULT_MODEL
 
-with open(apk_analysis_file, "r") as file:
-    llm_analysis = file.read()
+    with open(args.input, "r") as file:
+        report_content = file.read()
 
-messages = [
-    {
-        "role": "system",
-        "content": PRIVACY_PROMPT,
-    },
-    {
-        "role": "user",
-        "content": llm_analysis,
-    },
-]
+    llm_response = complete_with_responses(
+        model=model,
+        instructions=PRIVACY_PROMPT,
+        prompt=report_content,
+        api_key=os.getenv("OPENAI_API_KEY"),
+        max_output_tokens=args.max_output_tokens,
+    )
 
-llm_response = llm.invoke(
-    messages
-)
+    print(llm_response)
 
-print(llm_response.content)
+    with open(args.output, "w") as file:
+        file.write(llm_response)
 
-with open("llm_analysis.md", "w") as file:
-    file.write(llm_response.content)
+
+if __name__ == "__main__":
+    main()

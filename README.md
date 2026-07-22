@@ -1,25 +1,91 @@
-# Introduction
-- A stub that should be picked up again...
-- A project to reverse engineer the tik-tok apk. The motivation for the project is to create a demo and some slideware to use as recruitment material. Chinese tech is having a hardtime in the west due to tiktok at the time this was created, so seemed like a good analysis to create some attention.
-- Download a APK file from any APK repo. Then perform apk and androguard analysis.
-- The idea of the project is to
-    - Document current state: reverse engineer APK file and make report.
-    - Create futute state: increase quality of apk decompiled file so resembels the original codebase more. I.e. making the code more readable to increase the signal of the input
-    - Execution: Using LLM models better reconstruct the source code.
+# APK Privacy Analysis
 
-# Instructions
-Easist thing is to run the `androguard.py` analysis and parse the output using a LLM model. But, also use the decompiled files, when I made the analysis I just used the OpenAI web interface and pasted code in there. The results never made it to the codebase.
-```bash
-uv run androguard_analysis.py TikTok_39.2.1_APKPure.apk -o tik_tok_report.json
+This project statically analyzes consumer Android APKs and builds evidence-backed privacy assessment drafts. The included sample data is for TikTok, but the workflow is intentionally generic: use the same commands for Snapchat, Instagram, or any other APK.
+
+The working premise is that modern consumer tech can be intrusive. The repo still separates that premise from evidence: permissions are capability evidence, static API references are code-presence evidence, and runtime behavior requires dynamic validation.
+
+## Current Report
+
+The current human-consumable report artifact is:
+
+```text
+privacy_assessment_report.md
 ```
-Copy paste the `tik_tok_report.json` into a LLM and start asking questins regarding privacy concerns.
 
-# Cargo
-- androguard_analysis.py - perform analysis of the APK file which can later be fed to a LLM model.
-- apk_analysis.py - decompile the APK file so we can inspect the source code of the project.
-- flatten_decompiled_files.py - TODO: make one large file from decompiled files to feed to context.
-- reconstructed_sourcecode.py - TODO: based on hierarchy and flatten files create a reconstruction of the sourcecode.
-- llm_analysis.py - go through the androguard and apk files using langchain, create analysis of results.
-- dashboard.py - TODO: create a dashboard of the findings.
-- Taskfile.yml - not finished at this point.
-- requirements.txt
+See `GENERATED_ARTIFACTS.md` for the full artifact map.
+
+## Workflow
+
+Install dependencies:
+
+```bash
+task setup
+```
+
+Analyze any APK:
+
+```bash
+task analyze APK=/path/to/app.apk REPORT=app_report.json
+```
+
+Verify the structured Androguard path for an existing report:
+
+```bash
+task path1-check REPORT=app_report.json
+```
+
+Decompile any APK:
+
+```bash
+task decompile APK=/path/to/app.apk DECOMPILE_DIR=app_decompiled
+```
+
+Create reconstruction inventory and prompted report draft:
+
+```bash
+task inventory DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json INVENTORY_MD=app_inventory.md
+task report-draft REPORT=app_report.json INVENTORY=app_inventory.json REPORT_MD=app_privacy_report.md
+```
+
+`task report-draft` uses `PRIVACY_PROMPT` from `promps.py` and OpenAI SDK settings from `.env`. It also writes a deterministic evidence brief before prompting:
+
+```bash
+task report-evidence REPORT=app_report.json INVENTORY=app_inventory.json EVIDENCE_MD=app_evidence_brief.md
+```
+
+To generate the exact prompt payload locally without sending data to a model:
+
+```bash
+task report-prompt REPORT=app_report.json INVENTORY=app_inventory.json PROMPT_MD=app_prompt_payload.md
+```
+
+The default prompted model is `gpt-5.5`. To override it, pass:
+
+```bash
+task report-draft MODEL=your-model-name
+```
+
+For the bundled TikTok sample, the defaults are:
+
+```bash
+task dashboard
+task inventory
+task report-draft
+```
+
+## Main Files
+
+- `androguard_analysis.py` - creates a structured APK report from Androguard.
+- `apk_analysis.py` - decompiles an APK with apktool and scans smali for privacy-relevant patterns.
+- `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
+- `report_builder.py` - creates a deterministic evidence brief.
+- `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
+- `dashboard.py` - renders a terminal dashboard for the structured report.
+- `llm_analysis.py` - optional OpenAI-assisted analysis.
+- `ROADMAP.md` - current project roadmap and definition of done.
+- `AGENTS.md` - working instructions for future agents.
+
+## Current Path Status
+
+- Path 1, Androguard structured analysis: Milestone 1 complete.
+- Path 2, source reconstruction: inventory exists; manual reconstruction with line citations remains.

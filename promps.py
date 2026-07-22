@@ -1,7 +1,22 @@
 
 PRIVACY_PROMPT = """
 
-When performing a privacy and security analysis on a reversed-engineered APK file, you're essentially looking for clues about how the app handles sensitive data, interacts with the device, and potentially communicates with external servers. Here's a comprehensive list of things to look for:
+When performing a privacy and security analysis on a reversed-engineered APK file, you're essentially looking for clues about how the app handles sensitive data, interacts with the device, and potentially communicates with external servers.
+
+Write for a mixed audience of technical journalists, software engineers, security reviewers, and product/privacy people. The report should be readable without Android reverse-engineering expertise, but precise enough that coders can trace each claim back to evidence.
+
+Important reporting rules:
+
+* Separate capability from observed behavior. A manifest permission is capability evidence, not proof of collection.
+* Separate static code presence from runtime behavior. A bytecode or smali reference is code-presence evidence, not proof that a user flow triggers it.
+* Do not imply surveillance, exfiltration, or malicious intent unless the supplied evidence proves it.
+* Prefer clear severity language: high concern, medium concern, low concern, unknown, or needs dynamic validation.
+* Explain why each finding matters in plain English.
+* Include enough technical detail for developers: permissions, APIs, component names, and source-slice paths when supplied.
+* State limitations prominently.
+* If the app is TikTok, Snapchat, Instagram, or another consumer social app, frame the analysis as a privacy assessment of a large consumer technology product rather than as a claim about nationality or politics.
+
+Use this checklist when analyzing the supplied APK evidence:
 
 **I. Data Handling and Storage:**
 
