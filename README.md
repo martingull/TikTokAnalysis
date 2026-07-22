@@ -8,6 +8,20 @@ The working premise is that modern consumer tech can be intrusive. The repo stil
 
 This repo is moving toward a repeatable CLI tool in the style of `rectool`: Codex or VS Code Codex can be used as the planner, reviewer, and report assistant, but execution should stay in explicit Taskfile/Python commands. The durable interface is the CLI workflow, not an ad hoc chat transcript.
 
+## Final Product
+
+The deliverable is an evidence-backed APK privacy assessment package.
+
+It consists of:
+
+- A human-consumable privacy report: `privacy_assessment_report.md`
+- A reproducible CLI workflow for regenerating the analysis from an APK
+- Structured evidence artifacts for permissions, components, certificates, suspicious APIs, and reconstruction targets
+- Source review packets that cite apktool smali and optionally include JADX Java-like context
+- Clear labels distinguishing declared capability, static code presence, reviewed source behavior, and runtime-observed behavior
+
+The deliverable is not a full reconstructed source tree. Decompiled source is a supporting evidence layer used to explain and verify privacy/security findings.
+
 ## Current Report
 
 The current human-consumable report artifact is:

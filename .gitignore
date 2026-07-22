@@ -18,6 +18,11 @@ __pycache__/
 *_Decompiled/
 tiktok_decompiled/
 jadx_decompiled/
+jadx_selected/
+.jadx_config/
+.jadx_cache/
+.jadx_tmp/
+reconstruction_inventory.json
 source_findings.json
 tik_tok_report*.json*
 metadata.json

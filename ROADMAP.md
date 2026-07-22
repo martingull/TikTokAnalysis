@@ -4,6 +4,21 @@
 
 Bring this repository to a publishable state for Android APK privacy assessments. The bundled sample is TikTok, but the workflow should also support APKs from Snapchat, Instagram, and other consumer apps.
 
+## Final Product
+
+The final product is an evidence-backed APK privacy assessment package, not a full recovered application source tree.
+
+The package should include:
+
+- `privacy_assessment_report.md`: the current human-consumable report for publication or review.
+- A repeatable CLI workflow for regenerating analysis artifacts from an APK.
+- Structured Androguard evidence for manifest metadata, permissions, components, signing metadata, exported surfaces, and suspicious API references.
+- Reconstruction review packets that use apktool smali as line-cited evidence and JADX output as readable context where available.
+- Evidence labels that distinguish declared capability, static code presence, reviewed source behavior, and runtime-observed behavior.
+- A clear list of unresolved claims that need manual reconstruction or dynamic testing before publication.
+
+The reconstructed source tree is supporting material. Its purpose is to improve signal for humans and LLM-assisted review, not to recreate or maintain the original application.
+
 The work has two evidence paths:
 
 1. Androguard analysis: produce structured APK metadata, permissions, exported components, and suspicious API references.

@@ -15,7 +15,7 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 ### 1. `smali_classes17/com/google/android/gms/ads/identifier/AdvertisingIdClient.smali`
 
 - Class: `Lcom/google/android/gms/ads/identifier/AdvertisingIdClient`
-- JADX source: `not found`
+- JADX source: `jadx_decompiled/sources/com/google/android/gms/ads/identifier/AdvertisingIdClient.java`
 - Categories: `identifiers`, `network_telemetry`
 - Total matches: 54
 - Weighted score: 535
@@ -136,7 +136,113 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 #### JADX Reading Context
 
-No matching JADX source was found. Generate it with `task jadx` or review smali directly.
+- Line 34: `public class AdvertisingIdClient {`
+
+```java
+28: import java.util.HashMap;
+29: import java.util.Map;
+30: import java.util.concurrent.TimeUnit;
+31: import javax.net.ssl.HttpsURLConnection;
+32: 
+33: /* JADX INFO: loaded from: classes17.dex */
+34: public class AdvertisingIdClient {
+35:     public ServiceConnectionC1047460dMc LIZ;
+36:     public InterfaceC1053830dWt LIZIZ;
+37:     public boolean LIZJ;
+38:     public final Object LIZLLL;
+39:     public C569870MWp LJ;
+40:     public final Context LJFF;
+```
+
+- Line 68: `public AdvertisingIdClient(boolean z, Context context, boolean z2) {`
+
+```java
+62:             String string = sb.toString();
+63:             MethodCollector.o(670452);
+64:             return string;
+65:         }
+66:     }
+67: 
+68:     public AdvertisingIdClient(boolean z, Context context, boolean z2) {
+69:         Context contextT;
+70:         MethodCollector.i(673055);
+71:         this.LIZLLL = new Object();
+72:         C1053100dVi.LJIIIZ(context);
+73:         if (z && (contextT = C1514610pW5.T(context)) != null) {
+74:             context = contextT;
+```
+
+- Line 139: `map.put("tag", "AdvertisingIdClient");`
+
+```java
+133:         if (th != null) {
+134:             map.put("error", th.getClass().getName());
+135:         }
+136:         if (str != null && !str.isEmpty()) {
+137:             map.put("experiment_id", str);
+138:         }
+139:         map.put("tag", "AdvertisingIdClient");
+140:         map.put("time_spent", Long.toString(j));
+141:         new Thread() { // from class: X.0OXq
+142:             public final void LIZIZ() {
+143:                 MethodCollector.i(676004);
+144:                 Map map2 = map;
+145:                 Uri.Builder builderBuildUpon = UriProtector.parse("https://pagead2.googlesyndication.com/pagead/gen_204?id=gmob-apps").buildUpon();
+```
+
+- Line 276: `IOException iOException = new IOException("AdvertisingIdClient is not connected.");`
+
+```java
+270:             try {
+271:                 if (!this.LIZJ) {
+272:                     synchronized (this.LIZLLL) {
+273:                         try {
+274:                             C569870MWp c569870MWp = this.LJ;
+275:                             if (c569870MWp == null || !c569870MWp.LJLILLLLZI) {
+276:                                 IOException iOException = new IOException("AdvertisingIdClient is not connected.");
+277:                                 MethodCollector.o(673407);
+278:                                 throw iOException;
+279:                             }
+280:                         } catch (Throwable th) {
+281:                             TryCatchGuardChecker.doCheck(th);
+282:                             MethodCollector.o(673407);
+```
+
+- Line 289: `IOException iOException2 = new IOException("AdvertisingIdClient cannot reconnect.");`
+
+```java
+283:                             throw th;
+284:                         }
+285:                     }
+286:                     try {
+287:                         LJ();
+288:                         if (!this.LIZJ) {
+289:                             IOException iOException2 = new IOException("AdvertisingIdClient cannot reconnect.");
+290:                             MethodCollector.o(673407);
+291:                             throw iOException2;
+292:                         }
+293:                     } catch (Exception e) {
+294:                         TryCatchGuardChecker.doCheck(e);
+295:                         IOException iOException3 = new IOException("AdvertisingIdClient cannot reconnect.", e);
+```
+
+- Line 295: `IOException iOException3 = new IOException("AdvertisingIdClient cannot reconnect.", e);`
+
+```java
+289:                             IOException iOException2 = new IOException("AdvertisingIdClient cannot reconnect.");
+290:                             MethodCollector.o(673407);
+291:                             throw iOException2;
+292:                         }
+293:                     } catch (Exception e) {
+294:                         TryCatchGuardChecker.doCheck(e);
+295:                         IOException iOException3 = new IOException("AdvertisingIdClient cannot reconnect.", e);
+296:                         MethodCollector.o(673407);
+297:                         throw iOException3;
+298:                     }
+299:                 }
+300:                 C1053100dVi.LJIIIZ(this.LIZ);
+301:                 C1053100dVi.LJIIIZ(this.LIZIZ);
+```
 
 ### 2. `smali_classes17/com/bytedance/helios/statichook/config/ApiHookConfig.smali`
 
