@@ -165,7 +165,7 @@ def short_text(value, limit=280):
     return text[: limit - 3].rstrip() + "..."
 
 
-def build_report(analysis, inventory=None, source_findings=None):
+def build_report(analysis, inventory=None, source_findings=None, reviewed_notes=None):
     info = metadata(analysis)
     counts = component_counts(analysis)
     exported_components = unique_items(analysis.get("exported_components", []))
@@ -343,6 +343,16 @@ def build_report(analysis, inventory=None, source_findings=None):
     else:
         lines.append("No source finding packets were supplied. Run `task source-findings` after `task inventory` to add line-cited source context.")
 
+    if reviewed_notes:
+        lines.extend([
+            "",
+            "## Reviewed Source Notes",
+            "",
+            "The following notes are human-reviewed interpretation of selected source packets. They should carry more weight than unreviewed packet excerpts, but they still do not prove runtime behavior unless explicitly labeled as observed.",
+            "",
+            reviewed_notes.strip(),
+        ])
+
     lines.extend([
         "",
         "## Methodology",
@@ -374,13 +384,15 @@ def main():
     parser.add_argument("-a", "--analysis", default="apk_analysis_report.json", help="Androguard JSON report path")
     parser.add_argument("-i", "--inventory", default=None, help="Optional reconstruction inventory JSON path")
     parser.add_argument("-s", "--source-findings", default=None, help="Optional source findings JSON path")
+    parser.add_argument("--reviewed-notes", default=None, help="Optional reviewed source notes Markdown path")
     parser.add_argument("-o", "--output", default="privacy_assessment_report.md", help="Markdown report output path")
     args = parser.parse_args()
 
     analysis = load_json(args.analysis)
     inventory = load_json(args.inventory) if args.inventory else None
     source_findings = load_json(args.source_findings) if args.source_findings else None
-    Path(args.output).write_text(build_report(analysis, inventory, source_findings))
+    reviewed_notes = Path(args.reviewed_notes).read_text() if args.reviewed_notes else None
+    Path(args.output).write_text(build_report(analysis, inventory, source_findings, reviewed_notes))
     print(f"Privacy assessment report saved to: {args.output}")
 
 

@@ -15,6 +15,7 @@ vars:
   EVIDENCE_MD: '{{.EVIDENCE_MD | default "privacy_evidence_brief.md"}}'
   PROMPT_MD: '{{.PROMPT_MD | default "privacy_report_prompt_payload.md"}}'
   DYNAMIC_PLAN_MD: '{{.DYNAMIC_PLAN_MD | default "dynamic_privacy_validation_plan.md"}}'
+  REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD | default "reviewed_source_notes.md"}}'
   MODEL: '{{.MODEL | default "gpt-5.5"}}'
   PYTHON: '{{.PYTHON | default ".venv/bin/python"}}'
 
@@ -202,11 +203,14 @@ tasks:
         msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
     cmds:
       - |
-        if test -d "{{.JADX_DIR}}"; then
-          "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" -j "{{.JADX_DIR}}" -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
-        else
-          "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
+        jadx_args=""
+        if test -d "{{.JADX_SELECTED_DIR}}"; then
+          jadx_args="$jadx_args -j {{.JADX_SELECTED_DIR}}"
         fi
+        if test -d "{{.JADX_DIR}}"; then
+          jadx_args="$jadx_args -j {{.JADX_DIR}}"
+        fi
+        "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" $jadx_args -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
 
   report-draft:
     desc: Generate a prompted privacy report from REPORT={{.REPORT}} and INVENTORY={{.INVENTORY}}
@@ -219,10 +223,14 @@ tasks:
         msg: .env not found. Create it from .env.template with OpenAI SDK settings.
     cmds:
       - |
+        notes_args=""
+        if test -f "{{.REVIEWED_SOURCE_NOTES_MD}}"; then
+          notes_args="--reviewed-notes {{.REVIEWED_SOURCE_NOTES_MD}}"
+        fi
         if test -f "{{.SOURCE_FINDINGS}}"; then
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
         else
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
         fi
 
   report-prompt:
@@ -234,10 +242,14 @@ tasks:
         msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
     cmds:
       - |
+        notes_args=""
+        if test -f "{{.REVIEWED_SOURCE_NOTES_MD}}"; then
+          notes_args="--reviewed-notes {{.REVIEWED_SOURCE_NOTES_MD}}"
+        fi
         if test -f "{{.SOURCE_FINDINGS}}"; then
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
         else
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --dry-run
         fi
 
   report-evidence:
@@ -249,10 +261,14 @@ tasks:
         msg: Reconstruction inventory not found. Run task inventory first or set INVENTORY=/path/to/inventory.json.
     cmds:
       - |
+        notes_args=""
+        if test -f "{{.REVIEWED_SOURCE_NOTES_MD}}"; then
+          notes_args="--reviewed-notes {{.REVIEWED_SOURCE_NOTES_MD}}"
+        fi
         if test -f "{{.SOURCE_FINDINGS}}"; then
-          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.EVIDENCE_MD}}"
+          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" $notes_args -o "{{.EVIDENCE_MD}}"
         else
-          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.EVIDENCE_MD}}"
+          "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" $notes_args -o "{{.EVIDENCE_MD}}"
         fi
 
   dynamic-plan:

@@ -38,8 +38,8 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 1: .class public Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;
 2: .super Ljava/lang/Object;
 3: .source "SourceFile"
-4: 
-5: 
+4:
+5:
 6: # instance fields
 7: .field public LIZ:LX/0dMc;
 ```
@@ -48,53 +48,53 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 32:     invoke-static {v2}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->i(I)V
-33: 
+33:
 34:     new-instance v0, Ljava/lang/Object;
-35: 
+35:
 36:     invoke-direct {v0}, Ljava/lang/Object;-><init>()V
-37: 
+37:
 38:     iput-object v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZLLL:Ljava/lang/Object;
-39: 
+39:
 40:     invoke-static {p2}, LX/0dVi;->LJIIIZ(Ljava/lang/Object;)V
-41: 
+41:
 42:     if-eqz p1, :cond_0
-43: 
+43:
 44:     invoke-static {p2}, LX/0pW5;->T(Landroid/content/Context;)Landroid/content/Context;
 ```
 
 - Line 53, `identifiers`, `AdvertisingId`
 
 ```smali
-47: 
+47:
 48:     if-eqz v0, :cond_0
-49: 
+49:
 50:     move-object p2, v0
-51: 
+51:
 52:     :cond_0
 53:     iput-object p2, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJFF:Landroid/content/Context;
-54: 
+54:
 55:     const/4 v0, 0x0
-56: 
+56:
 57:     iput-boolean v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZJ:Z
-58: 
+58:
 59:     const-wide/16 v0, -0x1
 ```
 
 - Line 57, `identifiers`, `AdvertisingId`
 
 ```smali
-51: 
+51:
 52:     :cond_0
 53:     iput-object p2, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJFF:Landroid/content/Context;
-54: 
+54:
 55:     const/4 v0, 0x0
-56: 
+56:
 57:     iput-boolean v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZJ:Z
-58: 
+58:
 59:     const-wide/16 v0, -0x1
-60: 
+60:
 61:     iput-wide v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJII:J
-62: 
+62:
 63:     iput-boolean p3, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJI:Z
 ```
 
@@ -102,17 +102,17 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 55:     const/4 v0, 0x0
-56: 
+56:
 57:     iput-boolean v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZJ:Z
-58: 
+58:
 59:     const-wide/16 v0, -0x1
-60: 
+60:
 61:     iput-wide v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJII:J
-62: 
+62:
 63:     iput-boolean p3, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJI:Z
-64: 
+64:
 65:     invoke-static {v2}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->o(I)V
-66: 
+66:
 67:     return-void
 ```
 
@@ -120,18 +120,18 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 57:     iput-boolean v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LIZJ:Z
-58: 
+58:
 59:     const-wide/16 v0, -0x1
-60: 
+60:
 61:     iput-wide v0, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJII:J
-62: 
+62:
 63:     iput-boolean p3, p0, Lcom/google/android/gms/ads/identifier/AdvertisingIdClient;->LJI:Z
-64: 
+64:
 65:     invoke-static {v2}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->o(I)V
-66: 
+66:
 67:     return-void
 68: .end method
-69: 
+69:
 ```
 
 #### JADX Reading Context
@@ -143,7 +143,7 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 29: import java.util.Map;
 30: import java.util.concurrent.TimeUnit;
 31: import javax.net.ssl.HttpsURLConnection;
-32: 
+32:
 33: /* JADX INFO: loaded from: classes17.dex */
 34: public class AdvertisingIdClient {
 35:     public ServiceConnectionC1047460dMc LIZ;
@@ -162,7 +162,7 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 64:             return string;
 65:         }
 66:     }
-67: 
+67:
 68:     public AdvertisingIdClient(boolean z, Context context, boolean z2) {
 69:         Context contextT;
 70:         MethodCollector.i(673055);
@@ -247,7 +247,7 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 ### 2. `smali_classes17/com/bytedance/helios/statichook/config/ApiHookConfig.smali`
 
 - Class: `Lcom/bytedance/helios/statichook/config/ApiHookConfig`
-- JADX source: `not found`
+- JADX source: `jadx_selected/ApiHookConfig.java`
 - Categories: `camera_microphone`, `contacts_accounts`, `identifiers`, `installed_apps`, `location`, `network_telemetry`
 - Total matches: 78
 - Weighted score: 623
@@ -269,16 +269,16 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 ```smali
 44:     .line 3
 45:     invoke-static {v1}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->i(I)V
-46: 
+46:
 47:     .line 4
 48:     .line 5
 49:     .line 6
 50:     const-string v0, "This class is used as a dictionary maintains.\nDictionary layout:\n    |---- key: API ID, an integer value\n    |---- value: {API ID, API name hash code,                   API related resource id(may be empty),                  API related resource name(maybe empty),                  permissions(maybe empty),                  permission type(anyOf/allOf, maybe empty),                  data types,                  monitor class hash code,                  invoke type (before or/and around)}\nIn runtime, TikTok will monitor these sensitive API usage according to this dictionary to make sure there is no misuse. For example *getDeviceId/getSSID...etc* is not allowed in TikTok. And the ActionInvokers are used to intercept the usage of these API"
-51: 
+51:
 52:     .line 7
 53:     .line 8
 54:     sput-object v0, Lcom/bytedance/helios/statichook/config/ApiHookConfig;->desc:Ljava/lang/String;
-55: 
+55:
 56:     .line 9
 ```
 
@@ -286,17 +286,17 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 187:     move-result-object v1
-188: 
+188:
 189:     new-instance v5, LX/0eSA;
-190: 
+190:
 191:     const v6, 0x61ae4
-192: 
+192:
 193:     const-string v7, "okhttp3.OkHttpClient$Builder.build"
-194: 
+194:
 195:     const-string v8, "oh"
-196: 
+196:
 197:     const-string v9, "OkHttp"
-198: 
+198:
 199:     new-array v10, v0, [Ljava/lang/String;
 ```
 
@@ -304,17 +304,17 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 223:     move-result-object v1
-224: 
+224:
 225:     new-instance v5, LX/0eSA;
-226: 
+226:
 227:     const v6, 0x61ae6
-228: 
+228:
 229:     const-string v7, "okhttp3.Call.execute"
-230: 
+230:
 231:     const-string v8, "oh"
-232: 
+232:
 233:     const-string v9, "OkHttp"
-234: 
+234:
 235:     new-array v10, v0, [Ljava/lang/String;
 ```
 
@@ -322,17 +322,17 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 257:     move-result-object v1
-258: 
+258:
 259:     new-instance v5, LX/0eSA;
-260: 
+260:
 261:     const v6, 0x61ae7
-262: 
+262:
 263:     const-string v7, "okhttp3.Call.enqueue"
-264: 
+264:
 265:     const-string v8, "oh"
-266: 
+266:
 267:     const-string v9, "OkHttp"
-268: 
+268:
 269:     new-array v10, v0, [Ljava/lang/String;
 ```
 
@@ -340,17 +340,17 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 291:     move-result-object v1
-292: 
+292:
 293:     new-instance v5, LX/0eSA;
-294: 
+294:
 295:     const v6, 0x61b48
-296: 
+296:
 297:     const-string v7, "com.bytedance.retrofit2.Retrofit$Builder.build"
-298: 
+298:
 299:     const-string/jumbo v8, "ttn"
-300: 
+300:
 301:     const-string v9, "TTNet"
-302: 
+302:
 303:     new-array v10, v0, [Ljava/lang/String;
 ```
 
@@ -358,23 +358,129 @@ It is not a final report. Each packet needs manual reconstruction notes before i
 
 ```smali
 395:     move-result-object v1
-396: 
+396:
 397:     new-instance v5, LX/0eSA;
-398: 
+398:
 399:     const v6, 0x61b4c
-400: 
+400:
 401:     const-string v7, "com.bytedance.retrofit2.SsHttpCall.execute"
-402: 
+402:
 403:     const-string/jumbo v8, "ttn"
-404: 
+404:
 405:     const-string v9, "TTNet"
-406: 
+406:
 407:     new-array v10, v0, [Ljava/lang/String;
 ```
 
 #### JADX Reading Context
 
-No matching JADX source was found. Generate it with `task jadx` or review smali directly.
+- Line 1257: `desc = "This class is used as a dictionary maintains.\nDictionary layout:\n    |---- key: API ID, an integer value\n    |---- value: {API ID, API name hash code,                   API related resource id(may be empty),                  API related resource name(maybe empty),                  permissions(maybe empty),                  permission type(anyOf/allOf, maybe empty),                  data types,                  monitor class hash code,                  invoke type (before or/and around)}\nIn runtime, TikTok will monitor these sensitive API usage according to this dictionary to make sure there is no misuse. For example *getDeviceId/getSSID...etc* is not allowed in TikTok. And the ActionInvokers are used to intercept the usage of these API";`
+
+```java
+1251:         LIZ.put("-1516358764934429257", new PermissionPopUpActionInvoker());
+1252:         MethodCollector.o(664913);
+1253:     }
+1254:
+1255:     static {
+1256:         MethodCollector.i(665638);
+1257:         desc = "This class is used as a dictionary maintains.\nDictionary layout:\n    |---- key: API ID, an integer value\n    |---- value: {API ID, API name hash code,                   API related resource id(may be empty),                  API related resource name(maybe empty),                  permissions(maybe empty),                  permission type(anyOf/allOf, maybe empty),                  data types,                  monitor class hash code,                  invoke type (before or/and around)}\nIn runtime, TikTok will monitor these sensitive API usage according to this dictionary to make sure there is no misuse. For example *getDeviceId/getSSID...etc* is not allowed in TikTok. And the ActionInvokers are used to intercept the usage of these API";
+1258:         Map map = Collections.EMPTY_MAP;
+1259:         LIZ = map;
+1260:         LIZIZ = map;
+1261:         LIZJ = new InterfaceC1089610eSb[0];
+1262:         try {
+1263:             LIZIZ();
+```
+
+- Line 1276: `LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));`
+
+```java
+1270:
+1271:     public static void LIZ() {
+1272:         MethodCollector.i(665448);
+1273:         HashMap map = new HashMap(440);
+1274:         LIZIZ = map;
+1275:         map.put(400000, new C1089340eSA(400000, "java.net.URL.openConnection", "uc", "UrlConnection", new String[0], new String[]{"url_connection"}, new String[]{"6399108190750172076"}, "before"));
+1276:         LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1277:         LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1278:         LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1279:         LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1280:         LIZIZ.put(400201, new C1089340eSA(400201, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiOk", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1281:         LIZIZ.put(400202, new C1089340eSA(400202, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiError", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1282:         LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+```
+
+- Line 1277: `LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));`
+
+```java
+1271:     public static void LIZ() {
+1272:         MethodCollector.i(665448);
+1273:         HashMap map = new HashMap(440);
+1274:         LIZIZ = map;
+1275:         map.put(400000, new C1089340eSA(400000, "java.net.URL.openConnection", "uc", "UrlConnection", new String[0], new String[]{"url_connection"}, new String[]{"6399108190750172076"}, "before"));
+1276:         LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1277:         LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1278:         LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1279:         LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1280:         LIZIZ.put(400201, new C1089340eSA(400201, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiOk", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1281:         LIZIZ.put(400202, new C1089340eSA(400202, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiError", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1282:         LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1283:         LIZIZ.put(400205, new C1089340eSA(400205, "com.bytedance.retrofit2.SsHttpCall.enqueue", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+```
+
+- Line 1278: `LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));`
+
+```java
+1272:         MethodCollector.i(665448);
+1273:         HashMap map = new HashMap(440);
+1274:         LIZIZ = map;
+1275:         map.put(400000, new C1089340eSA(400000, "java.net.URL.openConnection", "uc", "UrlConnection", new String[0], new String[]{"url_connection"}, new String[]{"6399108190750172076"}, "before"));
+1276:         LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1277:         LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1278:         LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1279:         LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1280:         LIZIZ.put(400201, new C1089340eSA(400201, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiOk", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1281:         LIZIZ.put(400202, new C1089340eSA(400202, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiError", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1282:         LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1283:         LIZIZ.put(400205, new C1089340eSA(400205, "com.bytedance.retrofit2.SsHttpCall.enqueue", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1284:         LIZIZ.put(400600, new C1089340eSA(400600, "com.facebook.imagepipeline.request.ImageRequestBuilder.build", "fresco", "Fresco", new String[0], new String[]{"fresco"}, new String[]{"6399108190750172076"}, "before"));
+```
+
+- Line 1279: `LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));`
+
+```java
+1273:         HashMap map = new HashMap(440);
+1274:         LIZIZ = map;
+1275:         map.put(400000, new C1089340eSA(400000, "java.net.URL.openConnection", "uc", "UrlConnection", new String[0], new String[]{"url_connection"}, new String[]{"6399108190750172076"}, "before"));
+1276:         LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1277:         LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1278:         LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1279:         LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1280:         LIZIZ.put(400201, new C1089340eSA(400201, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiOk", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1281:         LIZIZ.put(400202, new C1089340eSA(400202, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiError", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1282:         LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1283:         LIZIZ.put(400205, new C1089340eSA(400205, "com.bytedance.retrofit2.SsHttpCall.enqueue", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1284:         LIZIZ.put(400600, new C1089340eSA(400600, "com.facebook.imagepipeline.request.ImageRequestBuilder.build", "fresco", "Fresco", new String[0], new String[]{"fresco"}, new String[]{"6399108190750172076"}, "before"));
+1285:         LIZIZ.put(400601, new C1089340eSA(400601, "com.ss.android.socialbase.downloader.service.IDownloadProcessDispatcherService.getDownloadId", "downloader", "Downloader", new String[0], new String[]{"downloader"}, new String[]{"6399108190750172076"}, "before"));
+```
+
+- Line 1282: `LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));`
+
+```java
+1276:         LIZIZ.put(400100, new C1089340eSA(400100, "okhttp3.OkHttpClient$Builder.build", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1277:         LIZIZ.put(400102, new C1089340eSA(400102, "okhttp3.Call.execute", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1278:         LIZIZ.put(400103, new C1089340eSA(400103, "okhttp3.Call.enqueue", "oh", "OkHttp", new String[0], new String[]{"ok_http"}, new String[]{"6399108190750172076"}, "before"));
+1279:         LIZIZ.put(400200, new C1089340eSA(400200, "com.bytedance.retrofit2.Retrofit$Builder.build", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1280:         LIZIZ.put(400201, new C1089340eSA(400201, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiOk", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1281:         LIZIZ.put(400202, new C1089340eSA(400202, "[com.bytedance.frameworks.baselib.network.http.NetworkParams$MonitorProcessHook].monitorApiError", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1282:         LIZIZ.put(400204, new C1089340eSA(400204, "com.bytedance.retrofit2.SsHttpCall.execute", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1283:         LIZIZ.put(400205, new C1089340eSA(400205, "com.bytedance.retrofit2.SsHttpCall.enqueue", "ttn", "TTNet", new String[0], new String[]{"tt_net"}, new String[]{"6399108190750172076"}, "before"));
+1284:         LIZIZ.put(400600, new C1089340eSA(400600, "com.facebook.imagepipeline.request.ImageRequestBuilder.build", "fresco", "Fresco", new String[0], new String[]{"fresco"}, new String[]{"6399108190750172076"}, "before"));
+1285:         LIZIZ.put(400601, new C1089340eSA(400601, "com.ss.android.socialbase.downloader.service.IDownloadProcessDispatcherService.getDownloadId", "downloader", "Downloader", new String[0], new String[]{"downloader"}, new String[]{"6399108190750172076"}, "before"));
+1286:         LIZIZ.put(11025, new C1089340eSA(11025, "android.webkit.CookieManager.setCookie", "", "", new String[0], new String[0], new String[]{"3697011946571727684"}, "around"));
+1287:         LIZIZ.put(11028, new C1089340eSA(11028, "com.facebook.FacebookSdk.setDataProcessingOptions", "", "", new String[0], new String[0], new String[]{"3697011946571727684"}, "around"));
+1288:         LIZIZ.put(11035, new C1089340eSA(11035, "com.google.firebase.analytics.FirebaseAnalytics.setUserId", "", "", new String[0], new String[0], new String[]{"3697011946571727684"}, "around"));
+```
 
 ### 3. `smali_classes40/com/byted/cast/capture/audio/AudioRecorder$AudioThread.smali`
 
@@ -402,8 +508,8 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1: .class public Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread;
 2: .super Lcom/bytedance/bpea/transmit/delegate/BPEAThread;
 3: .source "SourceFile"
-4: 
-5: 
+4:
+5:
 6: # annotations
 7: .annotation system Ldalvik/annotation/EnclosingClass;
 ```
@@ -413,13 +519,13 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 ```smali
 2: .super Lcom/bytedance/bpea/transmit/delegate/BPEAThread;
 3: .source "SourceFile"
-4: 
-5: 
+4:
+5:
 6: # annotations
 7: .annotation system Ldalvik/annotation/EnclosingClass;
 8:     value = Lcom/byted/cast/capture/audio/AudioRecorder;
 9: .end annotation
-10: 
+10:
 11: .annotation system Ldalvik/annotation/InnerClass;
 12:     accessFlags = 0x1
 13:     name = "AudioThread"
@@ -432,34 +538,34 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 12:     accessFlags = 0x1
 13:     name = "AudioThread"
 14: .end annotation
-15: 
-16: 
+15:
+16:
 17: # instance fields
 18: .field public final synthetic this$0:Lcom/byted/cast/capture/audio/AudioRecorder;
-19: 
-20: 
+19:
+20:
 21: # direct methods
 22: .method public constructor <init>(Lcom/byted/cast/capture/audio/AudioRecorder;)V
 23:     .locals 0
-24: 
+24:
 ```
 
 - Line 22, `camera_microphone`, `AudioRecord`
 
 ```smali
-16: 
+16:
 17: # instance fields
 18: .field public final synthetic this$0:Lcom/byted/cast/capture/audio/AudioRecorder;
-19: 
-20: 
+19:
+20:
 21: # direct methods
 22: .method public constructor <init>(Lcom/byted/cast/capture/audio/AudioRecorder;)V
 23:     .locals 0
-24: 
+24:
 25:     .prologue
 26:     .line 16777216
 27:     iput-object p1, p0, Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread;->this$0:Lcom/byted/cast/capture/audio/AudioRecorder;
-28: 
+28:
 ```
 
 - Line 27, `camera_microphone`, `AudioRecord`
@@ -468,15 +574,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 21: # direct methods
 22: .method public constructor <init>(Lcom/byted/cast/capture/audio/AudioRecorder;)V
 23:     .locals 0
-24: 
+24:
 25:     .prologue
 26:     .line 16777216
 27:     iput-object p1, p0, Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread;->this$0:Lcom/byted/cast/capture/audio/AudioRecorder;
-28: 
+28:
 29:     .line 16777217
 30:     .line 16777218
 31:     invoke-direct {p0}, Lcom/bytedance/bpea/transmit/delegate/BPEAThread;-><init>()V
-32: 
+32:
 33:     .line 16777219
 ```
 
@@ -488,14 +594,14 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 35:     .line 16777221
 36:     return-void
 37: .end method
-38: 
+38:
 39: .method public synthetic constructor <init>(Lcom/byted/cast/capture/audio/AudioRecorder;Lcom/byted/cast/capture/audio/AudioRecorder$1;)V
 40:     .locals 0
-41: 
+41:
 42:     .prologue
 43:     .line 33554432
 44:     invoke-direct {p0, p1}, Lcom/byted/cast/capture/audio/AudioRecorder$AudioThread;-><init>(Lcom/byted/cast/capture/audio/AudioRecorder;)V
-45: 
+45:
 ```
 
 #### JADX Reading Context
@@ -528,16 +634,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1: .class public final LX/0eGv;
 2: .super Ljava/lang/Object;
 3: .source "SourceFile"
-4: 
-5: 
+4:
+5:
 6: # direct methods
 7: .method public static LIZ(Landroid/accounts/AccountManager;Ljava/lang/String;)[Landroid/accounts/Account;
 8:     .locals 19
-9: 
+9:
 10:     .prologue
 11:     .line 33554432
 12:     const/16 v2, 0x5eba
-13: 
+13:
 ```
 
 - Line 59, `contacts_accounts`, `AccountManager`
@@ -545,16 +651,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 ```smali
 53:     .line 33554454
 54:     const v5, 0x19064
-55: 
+55:
 56:     .line 33554455
 57:     .line 33554456
 58:     .line 33554457
 59:     const-string v14, "android/accounts/AccountManager"
-60: 
+60:
 61:     .line 33554458
 62:     .line 33554459
 63:     const-string v15, "getAccounts"
-64: 
+64:
 65:     .line 33554460
 ```
 
@@ -564,51 +670,51 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 57:     .line 33554456
 58:     .line 33554457
 59:     const-string v14, "android/accounts/AccountManager"
-60: 
+60:
 61:     .line 33554458
 62:     .line 33554459
 63:     const-string v15, "getAccounts"
-64: 
+64:
 65:     .line 33554460
 66:     .line 33554461
 67:     const-string v18, "android.accounts.Account[]"
-68: 
+68:
 69:     .line 33554462
 ```
 
 - Line 112, `contacts_accounts`, `AccountManager`
 
 ```smali
-106: 
+106:
 107:     .line 33554480
 108:     .line 33554481
 109:     const/4 v8, 0x0
-110: 
+110:
 111:     .line 33554482
 112:     const-string v6, "android/accounts/AccountManager"
-113: 
+113:
 114:     .line 33554483
 115:     .line 33554484
 116:     const-string v7, "getAccounts"
-117: 
+117:
 118:     .line 33554485
 ```
 
 - Line 116, `contacts_accounts`, `getAccounts`
 
 ```smali
-110: 
+110:
 111:     .line 33554482
 112:     const-string v6, "android/accounts/AccountManager"
-113: 
+113:
 114:     .line 33554483
 115:     .line 33554484
 116:     const-string v7, "getAccounts"
-117: 
+117:
 118:     .line 33554485
 119:     .line 33554486
 120:     const/4 v12, 0x0
-121: 
+121:
 122:     .line 33554487
 ```
 
@@ -618,16 +724,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 139:     .line 33554496
 140:     .line 33554497
 141:     return-object v0
-142: 
+142:
 143:     .line 33554498
 144:     :cond_0
 145:     invoke-virtual {v10}, Landroid/accounts/AccountManager;->getAccounts()[Landroid/accounts/Account;
-146: 
+146:
 147:     .line 33554499
 148:     .line 33554500
 149:     .line 33554501
 150:     move-result-object v8
-151: 
+151:
 ```
 
 #### JADX Reading Context
@@ -661,14 +767,14 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 234:     .line 33554508
 235:     .line 33554509
 236:     move-result-object v9
-237: 
+237:
 238:     .line 33554510
 239:     const-string v0, "pm.queryIntentActivities(activityIntent, 0)"
-240: 
+240:
 241:     .line 33554511
 242:     .line 33554512
 243:     invoke-static {v9, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
-244: 
+244:
 245:     .line 33554513
 ```
 
@@ -679,14 +785,14 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 459:     .line 33554618
 460:     .line 33554619
 461:     move-result-object v1
-462: 
+462:
 463:     .line 33554620
 464:     const-string v0, "pm.queryIntentActivities\u2026VED_FILTER,\n            )"
-465: 
+465:
 466:     .line 33554621
 467:     .line 33554622
 468:     invoke-static {v1, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
-469: 
+469:
 470:     .line 33554623
 ```
 
@@ -718,13 +824,13 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 
 ```smali
 138: .field public LLILZLL:Z
-139: 
+139:
 140: .field public LLIZ:Landroid/content/Context;
-141: 
+141:
 142: .field public final LLIZLLLIL:Lcom/bytedance/common/utility/collection/WeakHandler;
-143: 
+143:
 144: .field public final LLJ:Landroid/content/SharedPreferences;
-145: 
+145:
 146: .field public final LLJI:LX/0jAh;
 147:     .annotation system Ldalvik/annotation/Signature;
 148:         value = {
@@ -735,19 +841,19 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 - Line 610, `local_storage`, `SharedPreferences`
 
 ```smali
-604: 
+604:
 605:     .line 16777292
 606:     .line 16777293
 607:     const/4 v1, 0x0
-608: 
+608:
 609:     .line 16777294
 610:     invoke-static {v2, v1, v0}, LX/09yB;->LIZIZ(Landroid/content/Context;ILjava/lang/String;)Landroid/content/SharedPreferences;
-611: 
+611:
 612:     .line 16777295
 613:     .line 16777296
 614:     .line 16777297
 615:     move-result-object v0
-616: 
+616:
 ```
 
 - Line 618, `local_storage`, `SharedPreferences`
@@ -757,14 +863,14 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 613:     .line 16777296
 614:     .line 16777297
 615:     move-result-object v0
-616: 
+616:
 617:     .line 16777298
 618:     iput-object v0, p0, LX/0dMp;->LLJ:Landroid/content/SharedPreferences;
-619: 
+619:
 620:     .line 16777299
 621:     .line 16777300
 622:     iput-boolean v1, p0, LX/0dMp;->LLILZLL:Z
-623: 
+623:
 624:     .line 16777301
 ```
 
@@ -774,15 +880,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1776:     .line 5
 1777:     .line 6
 1778:     sget-object v0, LX/0dLK;->LIZ:LX/0dLK;
-1779: 
+1779:
 1780:     .line 7
 1781:     .line 8
 1782:     iget-object v1, p0, LX/0dMp;->LLJ:Landroid/content/SharedPreferences;
-1783: 
+1783:
 1784:     .line 9
 1785:     .line 10
 1786:     invoke-virtual {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
-1787: 
+1787:
 1788:     .line 11
 ```
 
@@ -792,16 +898,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1813:     .line 26
 1814:     .line 27
 1815:     const-string v3, ""
-1816: 
+1816:
 1817:     .line 28
 1818:     .line 29
 1819:     invoke-interface {v1, v0, v3}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-1820: 
+1820:
 1821:     .line 30
 1822:     .line 31
 1823:     .line 32
 1824:     move-result-object v0
-1825: 
+1825:
 ```
 
 - Line 2694, `local_storage`, `SharedPreferences`
@@ -810,15 +916,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 2688:     .line 20
 2689:     :try_start_0
 2690:     new-instance v2, Lorg/json/JSONObject;
-2691: 
+2691:
 2692:     .line 21
 2693:     .line 22
 2694:     iget-object v1, p0, LX/0dMp;->LLJ:Landroid/content/SharedPreferences;
-2695: 
+2695:
 2696:     .line 23
 2697:     .line 24
 2698:     const-string v0, "raw_json"
-2699: 
+2699:
 2700:     .line 25
 ```
 
@@ -852,8 +958,8 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1: .class public Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;
 2: .super LX/0dlz;
 3: .source "SourceFile"
-4: 
-5: 
+4:
+5:
 6: # static fields
 7: .field public static sIgnoreMonitorLabel:Ljava/lang/String;
 ```
@@ -862,17 +968,17 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 
 ```smali
 11: .field public connectStartTime:J
-12: 
+12:
 13: .field public dnsStartTime:J
-14: 
+14:
 15: .field public needToDeal:Z
-16: 
+16:
 17: .field public okHttpRecord:Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;
-18: 
+18:
 19: .field public originListener:LX/0dlz;
-20: 
+20:
 21: .field public requestBodyEndTime:J
-22: 
+22:
 23: .field public requestHeader:Lorg/json/JSONObject;
 ```
 
@@ -883,32 +989,32 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 49:     .line 16777218
 50:     .line 16777219
 51:     const/4 v0, 0x1
-52: 
+52:
 53:     .line 16777220
 54:     iput-boolean v0, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->needToDeal:Z
-55: 
+55:
 56:     .line 16777221
 57:     .line 16777222
 58:     iput-object p1, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->originListener:LX/0dlz;
-59: 
+59:
 60:     .line 16777223
 ```
 
 - Line 58, `network_telemetry`, `okhttp`
 
 ```smali
-52: 
+52:
 53:     .line 16777220
 54:     iput-boolean v0, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->needToDeal:Z
-55: 
+55:
 56:     .line 16777221
 57:     .line 16777222
 58:     iput-object p1, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->originListener:LX/0dlz;
-59: 
+59:
 60:     .line 16777223
 61:     .line 16777224
 62:     new-instance v0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;
-63: 
+63:
 64:     .line 16777225
 ```
 
@@ -918,15 +1024,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 56:     .line 16777221
 57:     .line 16777222
 58:     iput-object p1, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->originListener:LX/0dlz;
-59: 
+59:
 60:     .line 16777223
 61:     .line 16777224
 62:     new-instance v0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;
-63: 
+63:
 64:     .line 16777225
 65:     .line 16777226
 66:     invoke-direct {v0}, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;-><init>()V
-67: 
+67:
 68:     .line 16777227
 ```
 
@@ -936,16 +1042,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 60:     .line 16777223
 61:     .line 16777224
 62:     new-instance v0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;
-63: 
+63:
 64:     .line 16777225
 65:     .line 16777226
 66:     invoke-direct {v0}, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;-><init>()V
-67: 
+67:
 68:     .line 16777227
 69:     .line 16777228
 70:     .line 16777229
 71:     iput-object v0, p0, Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpEventListener;->okHttpRecord:Lcom/bytedance/apm/agent/instrumentation/okhttp3/OkHttpRecord;
-72: 
+72:
 ```
 
 #### JADX Reading Context
@@ -978,16 +1084,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 105:     .line 16777248
 106:     .line 16777249
 107:     const-class v1, Lcom/ss/android/ugc/aweme/creative/model/stickers/StickerNewEngineModel;
-108: 
+108:
 109:     .line 16777250
 110:     .line 16777251
 111:     invoke-virtual {v1}, Ljava/lang/Class;->getClassLoader()Ljava/lang/ClassLoader;
-112: 
+112:
 113:     .line 16777252
 114:     .line 16777253
 115:     .line 16777254
 116:     move-result-object v1
-117: 
+117:
 ```
 
 - Line 119, `dynamic_loading`, `ClassLoader`
@@ -997,15 +1103,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 114:     .line 16777253
 115:     .line 16777254
 116:     move-result-object v1
-117: 
+117:
 118:     .line 16777255
 119:     invoke-virtual {v0, v1}, Landroid/os/Parcel;->readParcelable(Ljava/lang/ClassLoader;)Landroid/os/Parcelable;
-120: 
+120:
 121:     .line 16777256
 122:     .line 16777257
 123:     .line 16777258
 124:     move-result-object v2
-125: 
+125:
 ```
 
 - Line 252, `dynamic_loading`, `ClassLoader`
@@ -1014,16 +1120,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 246:     .line 16777316
 247:     .line 16777317
 248:     const-class v1, Lcom/ss/android/ugc/aweme/creative/model/stickers/StickerNewEngineModel;
-249: 
+249:
 250:     .line 16777318
 251:     .line 16777319
 252:     invoke-virtual {v1}, Ljava/lang/Class;->getClassLoader()Ljava/lang/ClassLoader;
-253: 
+253:
 254:     .line 16777320
 255:     .line 16777321
 256:     .line 16777322
 257:     move-result-object v1
-258: 
+258:
 ```
 
 - Line 260, `dynamic_loading`, `ClassLoader`
@@ -1033,15 +1139,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 255:     .line 16777321
 256:     .line 16777322
 257:     move-result-object v1
-258: 
+258:
 259:     .line 16777323
 260:     invoke-virtual {v0, v1}, Landroid/os/Parcel;->readParcelable(Ljava/lang/ClassLoader;)Landroid/os/Parcelable;
-261: 
+261:
 262:     .line 16777324
 263:     .line 16777325
 264:     .line 16777326
 265:     move-result-object v2
-266: 
+266:
 ```
 
 - Line 380, `dynamic_loading`, `ClassLoader`
@@ -1050,16 +1156,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 374:     .line 16777377
 375:     .line 16777378
 376:     const-class v1, Lcom/ss/android/ugc/aweme/creative/model/stickers/StickerNewEngineModel;
-377: 
+377:
 378:     .line 16777379
 379:     .line 16777380
 380:     invoke-virtual {v1}, Ljava/lang/Class;->getClassLoader()Ljava/lang/ClassLoader;
-381: 
+381:
 382:     .line 16777381
 383:     .line 16777382
 384:     .line 16777383
 385:     move-result-object v1
-386: 
+386:
 ```
 
 - Line 388, `dynamic_loading`, `ClassLoader`
@@ -1069,15 +1175,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 383:     .line 16777382
 384:     .line 16777383
 385:     move-result-object v1
-386: 
+386:
 387:     .line 16777384
 388:     invoke-virtual {v0, v1}, Landroid/os/Parcel;->readParcelable(Ljava/lang/ClassLoader;)Landroid/os/Parcelable;
-389: 
+389:
 390:     .line 16777385
 391:     .line 16777386
 392:     .line 16777387
 393:     move-result-object v2
-394: 
+394:
 ```
 
 #### JADX Reading Context
@@ -1111,15 +1217,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 680:     .line 21
 681:     .line 22
 682:     move-result-object v0
-683: 
+683:
 684:     .line 23
 685:     invoke-virtual {v2, v0}, Ljava/lang/Runtime;->exec([Ljava/lang/String;)Ljava/lang/Process;
-686: 
+686:
 687:     .line 24
 688:     .line 25
 689:     .line 26
 690:     move-result-object v3
-691: 
+691:
 ```
 
 - Line 856, `local_storage`, `SharedPreferences`
@@ -1127,17 +1233,17 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 ```smali
 850:     .line 16777228
 851:     invoke-virtual {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
-852: 
+852:
 853:     .line 16777229
 854:     .line 16777230
 855:     .line 16777231
 856:     invoke-static {}, LX/0gJg;->LIZJ()Landroid/content/SharedPreferences;
-857: 
+857:
 858:     .line 16777232
 859:     .line 16777233
 860:     .line 16777234
 861:     move-result-object v0
-862: 
+862:
 ```
 
 - Line 864, `local_storage`, `SharedPreferences`
@@ -1147,33 +1253,33 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 859:     .line 16777233
 860:     .line 16777234
 861:     move-result-object v0
-862: 
+862:
 863:     .line 16777235
 864:     invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
-865: 
+865:
 866:     .line 16777236
 867:     .line 16777237
 868:     .line 16777238
 869:     move-result-object v1
-870: 
+870:
 ```
 
 - Line 876, `local_storage`, `SharedPreferences`
 
 ```smali
-870: 
+870:
 871:     .line 16777239
 872:     const-string v0, "live_revenue_auto_exchange"
-873: 
+873:
 874:     .line 16777240
 875:     .line 16777241
 876:     invoke-interface {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
-877: 
+877:
 878:     .line 16777242
 879:     .line 16777243
 880:     .line 16777244
 881:     move-result-object v0
-882: 
+882:
 ```
 
 - Line 884, `local_storage`, `SharedPreferences`
@@ -1183,15 +1289,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 879:     .line 16777243
 880:     .line 16777244
 881:     move-result-object v0
-882: 
+882:
 883:     .line 16777245
 884:     invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
-885: 
+885:
 886:     .line 16777246
 887:     .line 16777247
 888:     .line 16777248
 889:     invoke-static {v3}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->o(I)V
-890: 
+890:
 ```
 
 - Line 938, `local_storage`, `SharedPreferences`
@@ -1199,17 +1305,17 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 ```smali
 932:     .line 16777228
 933:     invoke-virtual {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
-934: 
+934:
 935:     .line 16777229
 936:     .line 16777230
 937:     .line 16777231
 938:     invoke-static {}, LX/0gJg;->LIZJ()Landroid/content/SharedPreferences;
-939: 
+939:
 940:     .line 16777232
 941:     .line 16777233
 942:     .line 16777234
 943:     move-result-object v0
-944: 
+944:
 ```
 
 #### JADX Reading Context
@@ -1242,27 +1348,27 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 1: .class public Lcom/ss/android/vesdk/audio/TEAudioRecord;
 2: .super Ljava/lang/Object;
 3: .source "SourceFile"
-4: 
+4:
 5: # interfaces
 6: .implements LX/0hAt;
-7: 
+7:
 ```
 
 - Line 24, `camera_microphone`, `AudioRecord`
 
 ```smali
 18: .field public hasInited:I
-19: 
+19:
 20: .field public mAudioCallback:LX/0hAi;
-21: 
+21:
 22: .field public mAudioCaptureSettings:Lcom/ss/android/vesdk/VEAudioCaptureSettings;
-23: 
+23:
 24: .field public mAudioRecord:Landroid/media/AudioRecord;
-25: 
+25:
 26: .field public mAudioRecordStartTime:J
-27: 
+27:
 28: .field public mAudioRecordStopTime:J
-29: 
+29:
 30: .field public mAudioSource:I
 ```
 
@@ -1270,17 +1376,17 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 
 ```smali
 20: .field public mAudioCallback:LX/0hAi;
-21: 
+21:
 22: .field public mAudioCaptureSettings:Lcom/ss/android/vesdk/VEAudioCaptureSettings;
-23: 
+23:
 24: .field public mAudioRecord:Landroid/media/AudioRecord;
-25: 
+25:
 26: .field public mAudioRecordStartTime:J
-27: 
+27:
 28: .field public mAudioRecordStopTime:J
-29: 
+29:
 30: .field public mAudioSource:I
-31: 
+31:
 32: .field public mBitsPerSample:I
 ```
 
@@ -1288,17 +1394,17 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 
 ```smali
 22: .field public mAudioCaptureSettings:Lcom/ss/android/vesdk/VEAudioCaptureSettings;
-23: 
+23:
 24: .field public mAudioRecord:Landroid/media/AudioRecord;
-25: 
+25:
 26: .field public mAudioRecordStartTime:J
-27: 
+27:
 28: .field public mAudioRecordStopTime:J
-29: 
+29:
 30: .field public mAudioSource:I
-31: 
+31:
 32: .field public mBitsPerSample:I
-33: 
+33:
 34: .field public mBufferSizeInBytes:I
 ```
 
@@ -1307,16 +1413,16 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 ```smali
 61:     .line 3
 62:     invoke-static {v1}, Lcom/bytedance/frameworks/apm/trace/MethodCollector;->i(I)V
-63: 
+63:
 64:     .line 4
 65:     .line 5
 66:     .line 6
 67:     const-string v0, "TEAudioRecord"
-68: 
+68:
 69:     .line 7
 70:     .line 8
 71:     sput-object v0, Lcom/ss/android/vesdk/audio/TEAudioRecord;->TAG:Ljava/lang/String;
-72: 
+72:
 73:     .line 9
 ```
 
@@ -1326,15 +1432,15 @@ No matching JADX source was found. Generate it with `task jadx` or review smali 
 65:     .line 5
 66:     .line 6
 67:     const-string v0, "TEAudioRecord"
-68: 
+68:
 69:     .line 7
 70:     .line 8
 71:     sput-object v0, Lcom/ss/android/vesdk/audio/TEAudioRecord;->TAG:Ljava/lang/String;
-72: 
+72:
 73:     .line 9
 74:     .line 10
 75:     const/4 v0, 0x5
-76: 
+76:
 77:     .line 11
 ```
 

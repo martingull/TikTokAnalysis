@@ -104,6 +104,8 @@ task report-evidence REPORT=app_report.json INVENTORY=app_inventory.json EVIDENC
 
 When `source_findings.json` is present, `task report-draft`, `task report-prompt`, and `task report-evidence` include the line-cited source packets in the evidence brief automatically.
 
+When `reviewed_source_notes.md` is present, those commands also include the human-reviewed source interpretation. This is the preferred place to record what a selected class appears to do before regenerating the final report.
+
 To generate the exact prompt payload locally without sending data to a model:
 
 ```bash
@@ -140,6 +142,7 @@ Security analysis is a future third path. The repo does not currently define a `
 - `apk_analysis.py` - decompiles an APK with apktool and scans smali for privacy-relevant patterns.
 - `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
 - `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
+- `reviewed_source_notes.md` - hand-reviewed notes for selected source packets.
 - `report_builder.py` - creates a deterministic evidence brief.
 - `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
 - `dynamic_validation_plan.py` - turns static findings into runtime phone/proxy validation checks.

@@ -55,11 +55,60 @@ class SourceFindingsTest(unittest.TestCase):
                 ]
             }
 
-            payload = build_findings(inventory, decompile_dir, jadx_dir, 10, 1, 5)
+            payload = build_findings(inventory, decompile_dir, [jadx_dir], 10, 1, 5)
             finding = payload["findings"][0]
 
             self.assertEqual(finding["jadx_file"], str(java_path))
             self.assertEqual(finding["smali_context"][0]["line"], 3)
+            self.assertEqual(finding["jadx_matches"][0]["line"], 1)
+
+    def test_build_findings_finds_targeted_jadx_output(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            decompile_dir = root / "apktool"
+            smali_path = decompile_dir / "smali_classes1/com/example/ApiHookConfig.smali"
+            smali_path.parent.mkdir(parents=True)
+            smali_path.write_text(
+                "\n".join(
+                    [
+                        ".class public Lcom/example/ApiHookConfig;",
+                        ".method public test()V",
+                        'const-string v0, "getDeviceId"',
+                        ".end method",
+                    ]
+                )
+            )
+
+            selected_jadx_dir = root / "jadx_selected"
+            java_path = selected_jadx_dir / "ApiHookConfig.java"
+            selected_jadx_dir.mkdir()
+            java_path.write_text('class ApiHookConfig { String x = "getDeviceId"; }\n')
+
+            inventory = {
+                "selected_source_slices": [
+                    {
+                        "file": "smali_classes1/com/example/ApiHookConfig.smali",
+                        "class_name": "Lcom/example/ApiHookConfig",
+                        "weighted_score": 7,
+                        "total_matches": 1,
+                        "category_counts": {"identifiers": 1},
+                        "findings": [
+                            {
+                                "line": 3,
+                                "category": "identifiers",
+                                "keyword": "getDeviceId",
+                                "method": ".method public test()V",
+                                "code": "const-string",
+                            }
+                        ],
+                    }
+                ]
+            }
+
+            payload = build_findings(inventory, decompile_dir, [selected_jadx_dir], 10, 1, 5)
+            finding = payload["findings"][0]
+
+            self.assertEqual(finding["jadx_file"], str(java_path))
             self.assertEqual(finding["jadx_matches"][0]["line"], 1)
 
 

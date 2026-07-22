@@ -7,13 +7,35 @@ def load_json(path):
     return json.loads(Path(path).read_text())
 
 
-def smali_class_to_java_path(class_name, jadx_dir):
+def java_path_candidates(class_name, jadx_dir):
     if not class_name:
-        return None
+        return []
     normalized = class_name.strip(";")
     if normalized.startswith("L"):
         normalized = normalized[1:]
-    return Path(jadx_dir) / "sources" / f"{normalized}.java"
+    simple_name = normalized.rsplit("/", 1)[-1]
+    base = Path(jadx_dir)
+    return [
+        base / "sources" / f"{normalized}.java",
+        base / f"{normalized}.java",
+        base / f"{simple_name}.java",
+    ]
+
+
+def smali_class_to_java_path(class_name, jadx_dir):
+    for candidate in java_path_candidates(class_name, jadx_dir):
+        if candidate.is_file():
+            return candidate
+    candidates = java_path_candidates(class_name, jadx_dir)
+    return candidates[0] if candidates else None
+
+
+def resolve_jadx_path(class_name, jadx_dirs):
+    for jadx_dir in jadx_dirs:
+        path = smali_class_to_java_path(class_name, jadx_dir)
+        if path and path.is_file():
+            return path
+    return None
 
 
 def read_lines(path):
@@ -78,10 +100,12 @@ def selected_slices(inventory, limit):
     return slices[:limit]
 
 
-def build_findings(inventory, decompile_dir, jadx_dir, limit, context_radius, max_findings):
+def build_findings(inventory, decompile_dir, jadx_dirs, limit, context_radius, max_findings):
+    normalized_jadx_dirs = [Path(jadx_dir) for jadx_dir in (jadx_dirs or []) if jadx_dir]
     output = {
         "decompile_dir": str(decompile_dir),
-        "jadx_dir": str(jadx_dir) if jadx_dir else None,
+        "jadx_dir": str(normalized_jadx_dirs[0]) if normalized_jadx_dirs else None,
+        "jadx_dirs": [str(jadx_dir) for jadx_dir in normalized_jadx_dirs],
         "strategy": {
             "reading_layer": "JADX Java-like source when available",
             "evidence_layer": "apktool smali with line-numbered context",
@@ -92,7 +116,7 @@ def build_findings(inventory, decompile_dir, jadx_dir, limit, context_radius, ma
 
     for index, record in enumerate(selected_slices(inventory, limit), start=1):
         class_name = record.get("class_name")
-        jadx_path = smali_class_to_java_path(class_name, jadx_dir) if jadx_dir else None
+        jadx_path = resolve_jadx_path(class_name, normalized_jadx_dirs)
         findings = record.get("findings", [])[:max_findings]
         keywords = sorted({finding["keyword"] for finding in findings})
 
@@ -101,7 +125,7 @@ def build_findings(inventory, decompile_dir, jadx_dir, limit, context_radius, ma
                 "priority": index,
                 "smali_file": record["file"],
                 "class_name": class_name,
-                "jadx_file": str(jadx_path) if jadx_path and jadx_path.is_file() else None,
+                "jadx_file": str(jadx_path) if jadx_path else None,
                 "category_counts": record.get("category_counts", {}),
                 "total_matches": record.get("total_matches", 0),
                 "weighted_score": record.get("weighted_score", 0),
@@ -136,6 +160,13 @@ def add_code_block(lines, language, rows):
     lines.append(f"```{language}")
     lines.extend(rows)
     lines.append("```")
+
+
+def numbered_code_line(row):
+    code = row["code"]
+    if code:
+        return f"{row['line']}: {code}"
+    return f"{row['line']}:"
 
 
 def write_markdown(payload, output_path):
@@ -192,10 +223,7 @@ def write_markdown(payload, output_path):
             add_code_block(
                 lines,
                 "smali",
-                [
-                    f"{row['line']}: {row['code']}"
-                    for row in context["context"]
-                ],
+                [numbered_code_line(row) for row in context["context"]],
             )
             lines.append("")
 
@@ -206,10 +234,7 @@ def write_markdown(payload, output_path):
                 add_code_block(
                     lines,
                     "java",
-                    [
-                        f"{row['line']}: {row['code']}"
-                        for row in match["context"]
-                    ],
+                    [numbered_code_line(row) for row in match["context"]],
                 )
                 lines.append("")
         else:
@@ -223,7 +248,7 @@ def main():
     parser = argparse.ArgumentParser(description="Build source reconstruction review packets from inventory, smali, and optional JADX output.")
     parser.add_argument("-i", "--inventory", default="reconstruction_inventory.json", help="Reconstruction inventory JSON path")
     parser.add_argument("-d", "--decompile-dir", default="tiktok_decompiled", help="apktool decompiled directory")
-    parser.add_argument("-j", "--jadx-dir", default=None, help="Optional JADX output directory")
+    parser.add_argument("-j", "--jadx-dir", action="append", default=[], help="Optional JADX output directory. Pass more than once to include targeted and full JADX outputs.")
     parser.add_argument("-o", "--output", default="source_findings.json", help="JSON source findings output path")
     parser.add_argument("-m", "--markdown", default="source_findings.md", help="Markdown source findings output path")
     parser.add_argument("--limit", type=int, default=10, help="Maximum selected source slices to include")
@@ -233,19 +258,20 @@ def main():
 
     inventory_path = Path(args.inventory)
     decompile_dir = Path(args.decompile_dir)
-    jadx_dir = Path(args.jadx_dir) if args.jadx_dir else None
+    jadx_dirs = [Path(jadx_dir) for jadx_dir in args.jadx_dir]
 
     if not inventory_path.is_file():
         raise SystemExit(f"Inventory JSON not found: {inventory_path}")
     if not decompile_dir.is_dir():
         raise SystemExit(f"apktool decompiled directory not found: {decompile_dir}")
-    if jadx_dir and not jadx_dir.is_dir():
-        raise SystemExit(f"JADX directory not found: {jadx_dir}")
+    for jadx_dir in jadx_dirs:
+        if not jadx_dir.is_dir():
+            raise SystemExit(f"JADX directory not found: {jadx_dir}")
 
     payload = build_findings(
         load_json(inventory_path),
         decompile_dir,
-        jadx_dir,
+        jadx_dirs,
         args.limit,
         args.context_radius,
         args.max_findings,

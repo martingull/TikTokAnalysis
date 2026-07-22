@@ -62,6 +62,8 @@ For a quick privacy answer on a new APK, run `task privacy-indication` with expl
 
 For active privacy validation planning, run `task dynamic-plan`. This produces the phone/proxy checklist for validating static findings with runtime traffic and permission-state observations. It does not run the app or inspect traffic by itself.
 
+Put human interpretation of source packets in `reviewed_source_notes.md`. Keep `source_findings.md` as generated packet output and avoid editing it manually unless the generator changes.
+
 When regenerating analysis outputs, do not overwrite manual report drafts unless the task explicitly calls for it.
 
 There is no dedicated `SECURITY_PROMPT` yet. Security-marker work should stay evidence-first until that path is implemented: collect markers for command execution, dynamic loading, exported entry points, WebView bridges, native loading, and TLS/network weaknesses, then document triggerability and confidence separately from privacy capability claims.
@@ -72,6 +74,7 @@ There is no dedicated `SECURITY_PROMPT` yet. Security-marker work should stay ev
 - Treat a permission declaration as evidence of app capability, not proof of collection.
 - Treat a static API reference as evidence that code can call an API, not proof that a user flow triggers it.
 - Generate `privacy_evidence_brief.md` deterministically before creating prompted prose.
+- Include `reviewed_source_notes.md` in the evidence brief when reviewed source interpretation exists.
 - Mark prompted prose as draft analysis until checked against source evidence.
 - Prefer file path and line references from `tiktok_decompiled/` for publishable findings.
 - Use JADX output as the reading layer when available, but verify publishable claims against apktool smali line references.

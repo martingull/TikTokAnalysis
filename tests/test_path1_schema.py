@@ -118,6 +118,12 @@ class Path1SchemaTest(unittest.TestCase):
         self.assertIn("Line 12", report)
         self.assertIn("Runtime.getRuntime().exec", report)
 
+    def test_report_builder_includes_reviewed_source_notes_when_supplied(self):
+        report = build_report(SAMPLE_ANALYSIS, reviewed_notes="Reviewed behavior: API hook dictionary.")
+
+        self.assertIn("## Reviewed Source Notes", report)
+        self.assertIn("Reviewed behavior: API hook dictionary.", report)
+
 
 if __name__ == "__main__":
     unittest.main()
