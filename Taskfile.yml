@@ -17,6 +17,7 @@ vars:
   DYNAMIC_PLAN_MD: '{{.DYNAMIC_PLAN_MD | default "dynamic_privacy_validation_plan.md"}}'
   REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD | default "reviewed_source_notes.md"}}'
   MODEL: '{{.MODEL | default "gpt-5.5"}}'
+  MAX_OUTPUT_TOKENS: '{{.MAX_OUTPUT_TOKENS | default "10000"}}'
   PYTHON: '{{.PYTHON | default ".venv/bin/python"}}'
 
 tasks:
@@ -228,9 +229,9 @@ tasks:
           notes_args="--reviewed-notes {{.REVIEWED_SOURCE_NOTES_MD}}"
         fi
         if test -f "{{.SOURCE_FINDINGS}}"; then
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --max-output-tokens "{{.MAX_OUTPUT_TOKENS}}"
         else
-          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}"
+          "{{.PYTHON}}" prompted_report.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" $notes_args -o "{{.REPORT_MD}}" --evidence-output "{{.EVIDENCE_MD}}" --prompt-output "{{.PROMPT_MD}}" --model "{{.MODEL}}" --max-output-tokens "{{.MAX_OUTPUT_TOKENS}}"
         fi
 
   report-prompt:

@@ -65,7 +65,7 @@ def main():
     parser.add_argument("--prompt-output", default="privacy_report_prompt_payload.md", help="Prompt payload output path")
     parser.add_argument("--dry-run", action="store_true", help="Write evidence and prompt payload without calling OpenAI")
     parser.add_argument("--model", default=None, help="OpenAI model name")
-    parser.add_argument("--max-output-tokens", type=int, default=4096, help="Maximum report output tokens")
+    parser.add_argument("--max-output-tokens", type=int, default=10000, help="Maximum report output tokens")
     args = parser.parse_args()
 
     load_dotenv()

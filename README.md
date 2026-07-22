@@ -126,6 +126,12 @@ The default prompted model is `gpt-5.5`. To override it, pass:
 task report-draft MODEL=your-model-name
 ```
 
+The default report output ceiling is `10000` tokens. If a large APK report needs more room, pass:
+
+```bash
+task report-draft MAX_OUTPUT_TOKENS=14000
+```
+
 For the bundled TikTok sample, the defaults are:
 
 ```bash
