@@ -14,6 +14,7 @@ vars:
   REPORT_MD: '{{.REPORT_MD | default "privacy_assessment_report.md"}}'
   EVIDENCE_MD: '{{.EVIDENCE_MD | default "privacy_evidence_brief.md"}}'
   PROMPT_MD: '{{.PROMPT_MD | default "privacy_report_prompt_payload.md"}}'
+  DYNAMIC_PLAN_MD: '{{.DYNAMIC_PLAN_MD | default "dynamic_privacy_validation_plan.md"}}'
   MODEL: '{{.MODEL | default "gpt-5.5"}}'
   PYTHON: '{{.PYTHON | default ".venv/bin/python"}}'
 
@@ -37,7 +38,7 @@ tasks:
       - sh: test -x "{{.PYTHON}}"
         msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py'
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py apk_analysis.py dashboard.py main.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py dynamic_validation_plan.py'
 
   test:
     desc: Run the local unit tests
@@ -252,6 +253,19 @@ tasks:
           "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.EVIDENCE_MD}}"
         else
           "{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -i "{{.INVENTORY}}" -o "{{.EVIDENCE_MD}}"
+        fi
+
+  dynamic-plan:
+    desc: Generate a runtime privacy validation plan from REPORT={{.REPORT}}
+    preconditions:
+      - sh: test -f "{{.REPORT}}"
+        msg: Report JSON not found. Run task analyze first or set REPORT=/path/to/report.json.
+    cmds:
+      - |
+        if test -f "{{.SOURCE_FINDINGS}}"; then
+          "{{.PYTHON}}" dynamic_validation_plan.py -a "{{.REPORT}}" -s "{{.SOURCE_FINDINGS}}" -o "{{.DYNAMIC_PLAN_MD}}"
+        else
+          "{{.PYTHON}}" dynamic_validation_plan.py -a "{{.REPORT}}" -o "{{.DYNAMIC_PLAN_MD}}"
         fi
 
   milestone:

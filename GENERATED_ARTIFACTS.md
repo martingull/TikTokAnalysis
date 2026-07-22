@@ -17,6 +17,7 @@ These files support or reproduce the report:
 | `privacy_assessment_report.md` | Current human-consumable privacy assessment report | `task report-draft` |
 | `privacy_evidence_brief.md` | Deterministic evidence summary used as report input | `task report-evidence` or `task report-draft` |
 | `privacy_report_prompt_payload.md` | Exact prompt payload sent to the model | `task report-prompt` or `task report-draft` |
+| `dynamic_privacy_validation_plan.md` | Runtime phone/proxy validation plan derived from static privacy findings | `task dynamic-plan` |
 | `reconstruction_inventory.md` | Human-readable source reconstruction triage | `task inventory` |
 | `reconstruction_inventory.json` | Machine-readable reconstruction triage | `task inventory` |
 | `source_findings.md` | Human-readable source reconstruction review packets using smali and optional JADX context | `task source-findings` |
@@ -30,6 +31,7 @@ These files support or reproduce the report:
 - `task privacy-indication` produces a first-pass deterministic privacy brief from Androguard evidence only.
 - `task privacy-assessment` produces the full current static assessment package, including source-reconstruction triage and the prompted human report.
 - `task jadx-class` is the preferred way to add readable JADX context for specific classes in large APKs.
+- `task dynamic-plan` produces the active validation checklist for phone/proxy traffic review.
 
 ## Notes
 

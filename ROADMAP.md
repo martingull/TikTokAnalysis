@@ -31,6 +31,7 @@ The user-facing CLI surface should stay granular:
 - `task privacy-indication`: quick static privacy indication from Androguard evidence only.
 - `task privacy-assessment`: full static privacy assessment package with apktool inventory, source-finding packets, and prompted report output.
 - `task jadx-class`: targeted Java-like reconstruction for one selected class when full JADX output is too large.
+- `task dynamic-plan`: runtime phone/proxy validation plan derived from static findings.
 - Security-marker analysis: future path for command execution, dynamic loading, injection surfaces, exported-component abuse, and similar bug-bounty-oriented evidence. This path should get a dedicated prompt and task once the privacy workflow is stable.
 
 ## Current State
@@ -161,7 +162,15 @@ Each reconstructed slice should include:
 - Include links or paths to evidence files.
 - Add a repeatable publish target once the final report format is chosen.
 
-### 6. Security Marker Path
+### 6. Dynamic Privacy Validation
+
+- Generate `dynamic_privacy_validation_plan.md` from the static report and source finding packets.
+- Use a test device or emulator with a proxy such as Burp Suite, mitmproxy, or Charles.
+- Validate static findings against named flows: launch, login, idle, browse, search, profile, post, media upload, contact sync, permission grant/deny, logout.
+- Label every active result as `observed`, `not observed`, `blocked`, or `needs source review`.
+- Keep raw captures private and publish only minimized evidence needed to support claims.
+
+### 7. Security Marker Path
 
 - Add `SECURITY_PROMPT` only after the expected evidence schema is defined.
 - Build a deterministic marker report for shell execution, process spawning, dynamic class loading, native loading, WebView JavaScript bridges, exported component entry points, unsafe deserialization, and network/TLS weaknesses.
@@ -179,6 +188,7 @@ The repo is ready for publication when:
 - `task dashboard` renders the regenerated report without schema mismatches.
 - `task corpus-stats` and `task privacy-keywords` give reproducible reconstruction triage.
 - `task privacy-indication` produces a deterministic first-pass privacy brief for a supplied APK/report pair.
+- `task dynamic-plan` produces a runtime validation plan from the static artifacts.
 - The final report uses evidence tables with file paths, line numbers, and confidence labels.
 - Every high-severity claim is backed by both structured report data and reviewed source-level evidence, or is explicitly labeled as static-only.
 

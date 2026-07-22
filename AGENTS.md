@@ -43,6 +43,7 @@ task privacy-keywords
 task source-findings
 task report-evidence
 task report-draft
+task dynamic-plan
 ```
 
 Before changing analysis code, run:
@@ -58,6 +59,8 @@ task path1-check
 ```
 
 For a quick privacy answer on a new APK, run `task privacy-indication` with explicit `APK=`, `REPORT=`, and `EVIDENCE_MD=` values. For the full static package, run `task privacy-assessment`. Use `task jadx-class` for targeted readable source before attempting full `task jadx` on large apps.
+
+For active privacy validation planning, run `task dynamic-plan`. This produces the phone/proxy checklist for validating static findings with runtime traffic and permission-state observations. It does not run the app or inspect traffic by itself.
 
 When regenerating analysis outputs, do not overwrite manual report drafts unless the task explicitly calls for it.
 

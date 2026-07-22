@@ -110,6 +110,14 @@ To generate the exact prompt payload locally without sending data to a model:
 task report-prompt REPORT=app_report.json INVENTORY=app_inventory.json PROMPT_MD=app_prompt_payload.md
 ```
 
+Generate a runtime privacy validation plan from the static findings:
+
+```bash
+task dynamic-plan REPORT=app_report.json SOURCE_FINDINGS=app_source_findings.json DYNAMIC_PLAN_MD=app_dynamic_plan.md
+```
+
+This does not run the app or inspect traffic. It produces the phone/proxy test plan needed to validate whether static privacy concerns are observed at runtime.
+
 The default prompted model is `gpt-5.5`. To override it, pass:
 
 ```bash
@@ -134,6 +142,7 @@ Security analysis is a future third path. The repo does not currently define a `
 - `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
 - `report_builder.py` - creates a deterministic evidence brief.
 - `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
+- `dynamic_validation_plan.py` - turns static findings into runtime phone/proxy validation checks.
 - `dashboard.py` - renders a terminal dashboard for the structured report.
 - `ROADMAP.md` - current project roadmap and definition of done.
 - `AGENTS.md` - working instructions for future agents.
