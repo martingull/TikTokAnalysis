@@ -22,7 +22,14 @@ These files support or reproduce the report:
 | `source_findings.md` | Human-readable source reconstruction review packets using smali and optional JADX context | `task source-findings` |
 | `source_findings.json` | Machine-readable source reconstruction review packets | `task source-findings` |
 | `jadx_decompiled/` | Java-like source tree for reading and navigation | `task jadx` |
+| `jadx_selected/` | Targeted Java-like source for selected classes | `task jadx-class` |
 | `tik_tok_report.json` | Machine-readable Androguard structured report for the bundled TikTok sample | `task analyze` |
+
+## Product Workflows
+
+- `task privacy-indication` produces a first-pass deterministic privacy brief from Androguard evidence only.
+- `task privacy-assessment` produces the full current static assessment package, including source-reconstruction triage and the prompted human report.
+- `task jadx-class` is the preferred way to add readable JADX context for specific classes in large APKs.
 
 ## Notes
 

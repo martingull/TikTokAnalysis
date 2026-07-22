@@ -40,7 +40,23 @@ Install dependencies:
 task setup
 ```
 
-Analyze any APK:
+Get a first-pass privacy indication for any APK:
+
+```bash
+task privacy-indication APK=/path/to/app.apk REPORT=app_report.json EVIDENCE_MD=app_evidence_brief.md
+```
+
+This runs the structured Androguard path and writes a deterministic evidence brief without source reconstruction or an LLM call. It is the quickest answer to: "What privacy concerns does this APK appear to raise?"
+
+Build the full static privacy assessment package:
+
+```bash
+task privacy-assessment APK=/path/to/app.apk REPORT=app_report.json DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json REPORT_MD=app_privacy_report.md
+```
+
+This runs the static metadata path, apktool decompilation, reconstruction inventory, source-finding packets, and the prompted report draft. It is the current main product workflow.
+
+Run individual steps when you need finer control:
 
 ```bash
 task analyze APK=/path/to/app.apk REPORT=app_report.json
@@ -62,6 +78,12 @@ Optionally create Java-like source with JADX:
 
 ```bash
 task jadx APK=/path/to/app.apk JADX_DIR=app_jadx
+```
+
+For large or obfuscated APKs, prefer targeted JADX classes over a full tree:
+
+```bash
+task jadx-class APK=/path/to/app.apk JADX_CLASS=com.example.ClassName JADX_SELECTED_DIR=app_jadx_selected
 ```
 
 Create reconstruction inventory and prompted report draft:
@@ -100,6 +122,8 @@ task inventory
 task report-draft
 ```
 
+Security analysis is a future third path. The repo does not currently define a `SECURITY_PROMPT`; privacy reporting is the active publishable workflow, and command execution / dynamic loading markers are handled as privacy-adjacent static findings until the security workflow is added.
+
 ## Main Files
 
 - `androguard_analysis.py` - creates a structured APK report from Androguard.
@@ -117,3 +141,4 @@ task report-draft
 
 - Path 1, Androguard structured analysis: Milestone 1 complete.
 - Path 2, source reconstruction: inventory and source-finding packet generation exist; manual reconstruction with line citations remains.
+- Path 3, security marker analysis: planned; no dedicated prompt or workflow is implemented yet.

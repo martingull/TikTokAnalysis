@@ -5,6 +5,8 @@ vars:
   REPORT: '{{.REPORT | default "tik_tok_report.json"}}'
   DECOMPILE_DIR: '{{.DECOMPILE_DIR | default "tiktok_decompiled"}}'
   JADX_DIR: '{{.JADX_DIR | default "jadx_decompiled"}}'
+  JADX_SELECTED_DIR: '{{.JADX_SELECTED_DIR | default "jadx_selected"}}'
+  JADX_CLASS: '{{.JADX_CLASS | default ""}}'
   INVENTORY: '{{.INVENTORY | default "reconstruction_inventory.json"}}'
   INVENTORY_MD: '{{.INVENTORY_MD | default "reconstruction_inventory.md"}}'
   SOURCE_FINDINGS: '{{.SOURCE_FINDINGS | default "source_findings.json"}}'
@@ -90,6 +92,18 @@ tasks:
         vars:
           REPORT: '{{.REPORT}}'
 
+  privacy-indication:
+    desc: Fast privacy indication from Androguard only for APK={{.APK}}
+    cmds:
+      - task: analyze
+        vars:
+          APK: '{{.APK}}'
+          REPORT: '{{.REPORT}}'
+      - task: dashboard
+        vars:
+          REPORT: '{{.REPORT}}'
+      - '"{{.PYTHON}}" report_builder.py -a "{{.REPORT}}" -o "{{.EVIDENCE_MD}}"'
+
   llm:
     desc: Generate an LLM-assisted report from REPORT={{.REPORT}} using OpenAI SDK env vars
     preconditions:
@@ -119,6 +133,23 @@ tasks:
         msg: APK file not found. Set APK=/path/to/app.apk.
     cmds:
       - jadx -d "{{.JADX_DIR}}" "{{.APK}}"
+
+  jadx-class:
+    desc: Decompile one class from APK={{.APK}} with JADX_CLASS=com.example.ClassName
+    preconditions:
+      - sh: command -v jadx
+        msg: jadx is required for targeted Java-like reconstruction.
+      - sh: test -f "{{.APK}}"
+        msg: APK file not found. Set APK=/path/to/app.apk.
+      - sh: test -n "{{.JADX_CLASS}}"
+        msg: Set JADX_CLASS=com.example.ClassName.
+    cmds:
+      - |
+        class_path="$(printf '%s' "{{.JADX_CLASS}}" | tr '.' '/')"
+        output="{{.JADX_SELECTED_DIR}}/${class_path}.java"
+        mkdir -p "$(dirname "$output")" .jadx_config .jadx_cache .jadx_tmp
+        JADX_CONFIG_DIR=.jadx_config JADX_CACHE_DIR=.jadx_cache JADX_TMP_DIR=.jadx_tmp \
+          jadx -r --single-class "{{.JADX_CLASS}}" --single-class-output "$output" "{{.APK}}"
 
   corpus-stats:
     desc: Summarize the decompiled corpus size for reconstruction planning
@@ -224,6 +255,35 @@ tasks:
       - task: dashboard
         vars:
           REPORT: '{{.REPORT}}'
+      - task: inventory
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          INVENTORY_MD: '{{.INVENTORY_MD}}'
+      - task: source-findings
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          JADX_DIR: '{{.JADX_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
+      - task: report-draft
+        vars:
+          REPORT: '{{.REPORT}}'
+          INVENTORY: '{{.INVENTORY}}'
+          REPORT_MD: '{{.REPORT_MD}}'
+
+  privacy-assessment:
+    desc: Full static privacy assessment package for APK={{.APK}}
+    cmds:
+      - task: analyze
+        vars:
+          APK: '{{.APK}}'
+          REPORT: '{{.REPORT}}'
+      - task: decompile
+        vars:
+          APK: '{{.APK}}'
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
       - task: inventory
         vars:
           DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'

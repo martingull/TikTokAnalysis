@@ -32,9 +32,12 @@ task setup
 task check
 task test
 task path1-check
+task privacy-indication
+task privacy-assessment
 task analyze
 task decompile
 task jadx
+task jadx-class
 task dashboard
 task llm
 task corpus-stats
@@ -56,7 +59,11 @@ Before calling the Androguard structured-analysis path complete, run:
 task path1-check
 ```
 
+For a quick privacy answer on a new APK, run `task privacy-indication` with explicit `APK=`, `REPORT=`, and `EVIDENCE_MD=` values. For the full static package, run `task privacy-assessment`. Use `task jadx-class` for targeted readable source before attempting full `task jadx` on large apps.
+
 When regenerating analysis outputs, do not overwrite manual report drafts unless the task explicitly calls for it.
+
+There is no dedicated `SECURITY_PROMPT` yet. Security-marker work should stay evidence-first until that path is implemented: collect markers for command execution, dynamic loading, exported entry points, WebView bridges, native loading, and TLS/network weaknesses, then document triggerability and confidence separately from privacy capability claims.
 
 ## Evidence Standards
 
@@ -67,6 +74,7 @@ When regenerating analysis outputs, do not overwrite manual report drafts unless
 - Mark prompted prose as draft analysis until checked against source evidence.
 - Prefer file path and line references from `tiktok_decompiled/` for publishable findings.
 - Use JADX output as the reading layer when available, but verify publishable claims against apktool smali line references.
+- Prefer targeted JADX output for selected classes. Full JADX output for large APKs can be slow, large, and heavily obfuscated.
 - Keep reconstruction focused on privacy-relevant classes, SDKs, and call paths rather than attempting to fully restore the full application.
 
 ## Reconstruction Priorities

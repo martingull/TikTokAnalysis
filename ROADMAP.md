@@ -26,12 +26,20 @@ The work has two evidence paths:
 
 The report should combine both paths, with every important claim linked back to a concrete artifact.
 
+The user-facing CLI surface should stay granular:
+
+- `task privacy-indication`: quick static privacy indication from Androguard evidence only.
+- `task privacy-assessment`: full static privacy assessment package with apktool inventory, source-finding packets, and prompted report output.
+- `task jadx-class`: targeted Java-like reconstruction for one selected class when full JADX output is too large.
+- Security-marker analysis: future path for command execution, dynamic loading, injection surfaces, exported-component abuse, and similar bug-bounty-oriented evidence. This path should get a dedicated prompt and task once the privacy workflow is stable.
+
 ## Current State
 
 - APK: `TikTok_39.2.1_APKPure.apk` at about 435 MB.
 - Static report: `tik_tok_report.json` exists for TikTok `39.2.1`, package `com.zhiliaoapp.musically`.
 - Decompiled tree: `tiktok_decompiled/` exists at about 4.5 GB.
 - JADX output is optional and should be generated into `jadx_decompiled/` with `task jadx` when `jadx` is installed.
+- For large APKs, targeted JADX with `task jadx-class JADX_CLASS=...` is preferred over full-tree generation.
 - Decompiled corpus size: about 350,641 files, including about 331,014 `.smali` files across 54 smali roots.
 - Decompiled assets/resources: about 423 asset files, 18,532 resource files, and 471 native library files.
 - Existing LLM narrative: `llm_analysis.md` exists but has been superseded by the prompted report path.
@@ -110,6 +118,7 @@ JADX is now the preferred reading layer for Java/Kotlin-like app logic when avai
 - Rank files by privacy-relevant keyword hits.
 - Create a reviewed shortlist of classes to reconstruct first.
 - Generate optional JADX Java-like source with `task jadx` when `jadx` is installed.
+- Prefer targeted JADX source with `task jadx-class` for classes selected by the inventory or keyword scans.
 - Generate source reconstruction review packets with `task source-findings`.
 
 ### 3. Reconstruct Privacy-Relevant Source Slices
@@ -153,6 +162,13 @@ Each reconstructed slice should include:
 - Include links or paths to evidence files.
 - Add a repeatable publish target once the final report format is chosen.
 
+### 6. Security Marker Path
+
+- Add `SECURITY_PROMPT` only after the expected evidence schema is defined.
+- Build a deterministic marker report for shell execution, process spawning, dynamic class loading, native loading, WebView JavaScript bridges, exported component entry points, unsafe deserialization, and network/TLS weaknesses.
+- Keep this path bug-bounty-oriented: every issue needs triggerability notes, affected component or call path, exploit preconditions, and confidence.
+- Avoid claiming arbitrary code execution unless a reviewed source slice or dynamic test shows a controllable path into execution.
+
 ## Definition of Done
 
 The repo is ready for publication when:
@@ -163,6 +179,7 @@ The repo is ready for publication when:
 - `task analyze` can regenerate `tik_tok_report.json` from the APK.
 - `task dashboard` renders the regenerated report without schema mismatches.
 - `task corpus-stats` and `task privacy-keywords` give reproducible reconstruction triage.
+- `task privacy-indication` produces a deterministic first-pass privacy brief for a supplied APK/report pair.
 - The final report uses evidence tables with file paths, line numbers, and confidence labels.
 - Every high-severity claim is backed by both structured report data and reviewed source-level evidence, or is explicitly labeled as static-only.
 
