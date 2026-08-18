@@ -40,7 +40,10 @@ task jadx-class
 task dashboard
 task corpus-stats
 task privacy-keywords
+task source-reconstruction
+task source-reconstruction-full
 task source-findings
+task source-review-status
 task report-evidence
 task report-draft
 task dynamic-plan
@@ -61,6 +64,8 @@ task path1-check
 ```
 
 For a quick privacy answer on a new APK, run `task privacy-indication` with explicit `APK=`, `REPORT=`, and `EVIDENCE_MD=` values. For the full static package, run `task privacy-assessment`. Use `task jadx-class` for targeted readable source before attempting full `task jadx` on large apps.
+
+For source reconstruction against existing apktool output, run `task source-reconstruction`. This regenerates `reconstruction_inventory.md`, `source_findings.md`, and `source_reconstruction_status.md`. Use `task source-reconstruction-full` only when the apktool tree itself must be rebuilt.
 
 For active privacy validation planning, run `task dynamic-plan`. This produces the phone/proxy checklist for validating static findings with runtime traffic and permission-state observations. It does not run the app or inspect traffic by itself.
 

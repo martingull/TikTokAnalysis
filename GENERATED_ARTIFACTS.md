@@ -23,6 +23,7 @@ These files support or reproduce the report:
 | `reconstruction_inventory.json` | Machine-readable reconstruction triage | `task inventory` |
 | `source_findings.md` | Human-readable source reconstruction review packets using smali and optional JADX context | `task source-findings` |
 | `source_findings.json` | Machine-readable source reconstruction review packets | `task source-findings` |
+| `source_reconstruction_status.md` | Generated summary of source packet review status and JADX coverage | `task source-review-status` or `task source-reconstruction` |
 | `security_markers.md` | Human-readable security-marker triage with static line references and exported-component context | `task security-markers` |
 | `security_markers.json` | Machine-readable security-marker triage | `task security-markers` |
 | `reviewed_security_notes.md` | Hand-reviewed interpretation of generated security-marker packets | Manual review |
@@ -34,6 +35,8 @@ These files support or reproduce the report:
 
 - `task privacy-indication` produces a first-pass deterministic privacy brief from Androguard evidence only.
 - `task privacy-assessment` produces the full current static assessment package, including source-reconstruction triage and the prompted human report.
+- `task source-reconstruction` produces the cached source reconstruction package from an existing apktool tree.
+- `task source-reconstruction-full` regenerates apktool output before source reconstruction.
 - `task jadx-class` is the preferred way to add readable JADX context for specific classes in large APKs.
 - `task dynamic-plan` produces the active validation checklist for phone/proxy traffic review.
 - `task security-markers` produces static security-marker triage; it does not claim exploitability.
@@ -45,4 +48,5 @@ These files support or reproduce the report:
 - `privacy_assessment_report.md` is the report artifact. The other files are evidence, prompt, or triage material.
 - `tik_tok_report.json`, APK files, `source_findings.json`, `security_markers.json`, and decompiled source trees are treated as generated/local artifacts by `.gitignore`.
 - `source_findings.md` is suitable to commit when it is small enough to review and useful for the report.
+- `SOURCE_RECONSTRUCTION.md` documents the source reconstruction feature boundary: focused evidence reconstruction, not full app recovery.
 - For another APK, pass `APK=...`, `REPORT=...`, `DECOMPILE_DIR=...`, `JADX_DIR=...`, `INVENTORY=...`, and `REPORT_MD=...` to the Taskfile targets.

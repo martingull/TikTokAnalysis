@@ -30,6 +30,7 @@ The user-facing CLI surface should stay granular:
 
 - `task privacy-indication`: quick static privacy indication from Androguard evidence only.
 - `task privacy-assessment`: full static privacy assessment package with apktool inventory, source-finding packets, and prompted report output.
+- `task source-reconstruction`: cached source reconstruction package from an existing apktool tree.
 - `task jadx-class`: targeted Java-like reconstruction for one selected class when full JADX output is too large.
 - `task dynamic-plan`: runtime phone/proxy validation plan derived from static findings.
 - Security-marker analysis: deterministic marker triage for command execution, dynamic loading, injection surfaces, exported-component abuse, and similar bug-bounty-oriented evidence. This path should get reviewed source notes and a dedicated prompt only after the evidence schema is stable.
@@ -101,6 +102,8 @@ The inventory, shortlist, and source-finding packet generator exist. The publish
 
 JADX is now the preferred reading layer for Java/Kotlin-like app logic when available. apktool smali remains the evidence layer for line-cited claims.
 
+`SOURCE_RECONSTRUCTION.md` defines the feature boundary: source reconstruction means focused evidence reconstruction for selected source slices, not full app source recovery.
+
 ## Outstanding Work
 
 ### 1. Stabilize the Analysis Pipeline
@@ -119,6 +122,7 @@ JADX is now the preferred reading layer for Java/Kotlin-like app logic when avai
 - Generate optional JADX Java-like source with `task jadx` when `jadx` is installed.
 - Prefer targeted JADX source with `task jadx-class` for classes selected by the inventory or keyword scans.
 - Generate source reconstruction review packets with `task source-findings`.
+- Generate source reconstruction review status with `task source-review-status`.
 
 ### 3. Reconstruct Privacy-Relevant Source Slices
 

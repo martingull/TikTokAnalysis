@@ -51,10 +51,18 @@ This runs the structured Androguard path and writes a deterministic evidence bri
 Build the full static privacy assessment package:
 
 ```bash
-task privacy-assessment APK=/path/to/app.apk REPORT=app_report.json DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json REPORT_MD=app_privacy_report.md
+task privacy-assessment APK=/path/to/app.apk REPORT=app_report.json DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json SOURCE_FINDINGS=app_source_findings.json SOURCE_RECONSTRUCTION_STATUS_MD=app_source_status.md REPORT_MD=app_privacy_report.md
 ```
 
 This runs the static metadata path, apktool decompilation, reconstruction inventory, source-finding packets, and the prompted report draft. It is the current main product workflow.
+
+Run the source reconstruction feature against existing apktool output:
+
+```bash
+task source-reconstruction DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json SOURCE_FINDINGS=app_source_findings.json SOURCE_FINDINGS_MD=app_source_findings.md SOURCE_RECONSTRUCTION_STATUS_MD=app_source_status.md
+```
+
+This generates the source inventory, generated source review packets, and a status summary showing which packets have reviewed notes. See `SOURCE_RECONSTRUCTION.md` for the artifact ladder and review rules.
 
 Run individual steps when you need finer control:
 
@@ -104,8 +112,9 @@ Create reconstruction inventory and prompted report draft:
 
 ```bash
 task inventory DECOMPILE_DIR=app_decompiled INVENTORY=app_inventory.json INVENTORY_MD=app_inventory.md
-task source-findings DECOMPILE_DIR=app_decompiled JADX_DIR=app_jadx INVENTORY=app_inventory.json SOURCE_FINDINGS_MD=app_source_findings.md
-task report-draft REPORT=app_report.json INVENTORY=app_inventory.json REPORT_MD=app_privacy_report.md
+task source-findings DECOMPILE_DIR=app_decompiled JADX_DIR=app_jadx INVENTORY=app_inventory.json SOURCE_FINDINGS=app_source_findings.json SOURCE_FINDINGS_MD=app_source_findings.md
+task source-review-status SOURCE_FINDINGS=app_source_findings.json SOURCE_RECONSTRUCTION_STATUS_MD=app_source_status.md
+task report-draft REPORT=app_report.json INVENTORY=app_inventory.json SOURCE_FINDINGS=app_source_findings.json REPORT_MD=app_privacy_report.md
 ```
 
 For source reconstruction, JADX is the reading layer and apktool smali is the evidence layer. Use JADX output to understand Java/Kotlin-like control flow, then verify publishable claims against smali line references.
@@ -161,6 +170,8 @@ Security-marker triage is now available through `task security-markers`; use `ta
 - `androguard_analysis.py` - creates a structured APK report from Androguard.
 - `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
 - `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
+- `source_reconstruction_status.py` - summarizes generated and reviewed source packet status.
+- `SOURCE_RECONSTRUCTION.md` - defines the source reconstruction artifact ladder and review workflow.
 - `security_markers.py` - generates deterministic static security-marker triage.
 - `reviewed_source_notes.md` - hand-reviewed notes for selected source packets.
 - `report_builder.py` - creates a deterministic evidence brief.

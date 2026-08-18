@@ -11,6 +11,7 @@ vars:
   INVENTORY_MD: '{{.INVENTORY_MD | default "reconstruction_inventory.md"}}'
   SOURCE_FINDINGS: '{{.SOURCE_FINDINGS | default "source_findings.json"}}'
   SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD | default "source_findings.md"}}'
+  SOURCE_RECONSTRUCTION_STATUS_MD: '{{.SOURCE_RECONSTRUCTION_STATUS_MD | default "source_reconstruction_status.md"}}'
   SECURITY_MARKERS: '{{.SECURITY_MARKERS | default "security_markers.json"}}'
   SECURITY_MARKERS_MD: '{{.SECURITY_MARKERS_MD | default "security_markers.md"}}'
   REPORT_MD: '{{.REPORT_MD | default "privacy_assessment_report.md"}}'
@@ -46,7 +47,7 @@ tasks:
       - sh: test -x "{{.PYTHON}}"
         msg: Python interpreter not found. Run task setup first or set PYTHON=/path/to/python.
     cmds:
-      - '"{{.PYTHON}}" -m compileall androguard_analysis.py dashboard.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py dynamic_validation_plan.py security_markers.py'
+      - '"{{.PYTHON}}" -m compileall androguard_analysis.py dashboard.py promps.py reconstruction_inventory.py report_builder.py prompted_report.py openai_helpers.py source_findings.py source_reconstruction_status.py dynamic_validation_plan.py security_markers.py'
 
   test:
     desc: Run the local unit tests
@@ -219,6 +220,55 @@ tasks:
         fi
         "{{.PYTHON}}" source_findings.py -i "{{.INVENTORY}}" -d "{{.DECOMPILE_DIR}}" $jadx_args -o "{{.SOURCE_FINDINGS}}" -m "{{.SOURCE_FINDINGS_MD}}"
 
+  source-review-status:
+    desc: Summarize generated vs reviewed source reconstruction packet status
+    preconditions:
+      - sh: test -f "{{.SOURCE_FINDINGS}}"
+        msg: Source findings JSON not found. Run task source-findings first or set SOURCE_FINDINGS=/path/to/source_findings.json.
+    cmds:
+      - '"{{.PYTHON}}" source_reconstruction_status.py -s "{{.SOURCE_FINDINGS}}" -r "{{.REVIEWED_SOURCE_NOTES_MD}}" -o "{{.SOURCE_RECONSTRUCTION_STATUS_MD}}"'
+
+  source-reconstruction:
+    desc: Cached source reconstruction workflow from DECOMPILE_DIR={{.DECOMPILE_DIR}}
+    cmds:
+      - task: inventory
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          INVENTORY_MD: '{{.INVENTORY_MD}}'
+      - task: source-findings
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          JADX_DIR: '{{.JADX_DIR}}'
+          JADX_SELECTED_DIR: '{{.JADX_SELECTED_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
+      - task: source-review-status
+        vars:
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
+          SOURCE_RECONSTRUCTION_STATUS_MD: '{{.SOURCE_RECONSTRUCTION_STATUS_MD}}'
+
+  source-reconstruction-full:
+    desc: Rebuild apktool decompile tree, then run source reconstruction
+    cmds:
+      - task: decompile
+        vars:
+          APK: '{{.APK}}'
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+      - task: source-reconstruction
+        vars:
+          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
+          JADX_DIR: '{{.JADX_DIR}}'
+          JADX_SELECTED_DIR: '{{.JADX_SELECTED_DIR}}'
+          INVENTORY: '{{.INVENTORY}}'
+          INVENTORY_MD: '{{.INVENTORY_MD}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
+          SOURCE_RECONSTRUCTION_STATUS_MD: '{{.SOURCE_RECONSTRUCTION_STATUS_MD}}'
+
   report-draft:
     desc: Generate a prompted privacy report from REPORT={{.REPORT}} and INVENTORY={{.INVENTORY}}
     preconditions:
@@ -334,14 +384,26 @@ tasks:
         vars:
           DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
           JADX_DIR: '{{.JADX_DIR}}'
+          JADX_SELECTED_DIR: '{{.JADX_SELECTED_DIR}}'
           INVENTORY: '{{.INVENTORY}}'
           SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
           SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
+      - task: source-review-status
+        vars:
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
+          SOURCE_RECONSTRUCTION_STATUS_MD: '{{.SOURCE_RECONSTRUCTION_STATUS_MD}}'
       - task: report-draft
         vars:
           REPORT: '{{.REPORT}}'
           INVENTORY: '{{.INVENTORY}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
           REPORT_MD: '{{.REPORT_MD}}'
+          EVIDENCE_MD: '{{.EVIDENCE_MD}}'
+          PROMPT_MD: '{{.PROMPT_MD}}'
+          MODEL: '{{.MODEL}}'
+          MAX_OUTPUT_TOKENS: '{{.MAX_OUTPUT_TOKENS}}'
 
   privacy-assessment:
     desc: Full static privacy assessment package for APK={{.APK}}
@@ -354,20 +416,25 @@ tasks:
         vars:
           APK: '{{.APK}}'
           DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
-      - task: inventory
-        vars:
-          DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
-          INVENTORY: '{{.INVENTORY}}'
-          INVENTORY_MD: '{{.INVENTORY_MD}}'
-      - task: source-findings
+      - task: source-reconstruction
         vars:
           DECOMPILE_DIR: '{{.DECOMPILE_DIR}}'
           JADX_DIR: '{{.JADX_DIR}}'
+          JADX_SELECTED_DIR: '{{.JADX_SELECTED_DIR}}'
           INVENTORY: '{{.INVENTORY}}'
+          INVENTORY_MD: '{{.INVENTORY_MD}}'
           SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
           SOURCE_FINDINGS_MD: '{{.SOURCE_FINDINGS_MD}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
+          SOURCE_RECONSTRUCTION_STATUS_MD: '{{.SOURCE_RECONSTRUCTION_STATUS_MD}}'
       - task: report-draft
         vars:
           REPORT: '{{.REPORT}}'
           INVENTORY: '{{.INVENTORY}}'
+          SOURCE_FINDINGS: '{{.SOURCE_FINDINGS}}'
+          REVIEWED_SOURCE_NOTES_MD: '{{.REVIEWED_SOURCE_NOTES_MD}}'
           REPORT_MD: '{{.REPORT_MD}}'
+          EVIDENCE_MD: '{{.EVIDENCE_MD}}'
+          PROMPT_MD: '{{.PROMPT_MD}}'
+          MODEL: '{{.MODEL}}'
+          MAX_OUTPUT_TOKENS: '{{.MAX_OUTPUT_TOKENS}}'
