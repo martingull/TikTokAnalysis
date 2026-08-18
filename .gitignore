@@ -24,6 +24,7 @@ jadx_selected/
 .jadx_tmp/
 reconstruction_inventory.json
 source_findings.json
+security_markers.json
 tik_tok_report*.json*
 metadata.json
 

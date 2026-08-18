@@ -77,13 +77,27 @@ task decompile APK=/path/to/app.apk DECOMPILE_DIR=app_decompiled
 Optionally create Java-like source with JADX:
 
 ```bash
-task jadx APK=/path/to/app.apk JADX_DIR=app_jadx
+task jadx APK=/path/to/app.apk JADX_DIR=app_jadx JADX_HEAP=10g JADX_THREADS=2
 ```
 
 For large or obfuscated APKs, prefer targeted JADX classes over a full tree:
 
 ```bash
-task jadx-class APK=/path/to/app.apk JADX_CLASS=com.example.ClassName JADX_SELECTED_DIR=app_jadx_selected
+task jadx-class APK=/path/to/app.apk JADX_CLASS=com.example.ClassName JADX_SELECTED_DIR=app_jadx_selected JADX_HEAP=10g JADX_THREADS=2
+```
+
+Generate deterministic security-marker triage:
+
+```bash
+task security-markers REPORT=app_report.json DECOMPILE_DIR=app_decompiled SECURITY_MARKERS_MD=app_security_markers.md
+```
+
+This scans apktool smali and the structured report for markers such as command execution, dynamic code loading, native loading, WebView bridges, TLS trust customization, content/file URI exposure, intent entry points, and exported components. These are triage signals, not vulnerability claims; triggerability and exploitability require manual source review or dynamic testing.
+
+To regenerate the structured report, apktool tree, and security-marker triage together:
+
+```bash
+task security-assessment APK=/path/to/app.apk REPORT=app_report.json DECOMPILE_DIR=app_decompiled SECURITY_MARKERS_MD=app_security_markers.md
 ```
 
 Create reconstruction inventory and prompted report draft:
@@ -140,13 +154,14 @@ task inventory
 task report-draft
 ```
 
-Security analysis is a future third path. The repo does not currently define a `SECURITY_PROMPT`; privacy reporting is the active publishable workflow, and command execution / dynamic loading markers are handled as privacy-adjacent static findings until the security workflow is added.
+Security-marker triage is now available through `task security-markers`; use `task security-assessment` for the full regenerate-and-scan package. The repo does not currently define a `SECURITY_PROMPT`; privacy reporting remains the active publishable workflow until reviewed marker packets justify a dedicated vulnerability-report path.
 
 ## Main Files
 
 - `androguard_analysis.py` - creates a structured APK report from Androguard.
 - `reconstruction_inventory.py` - ranks privacy-relevant smali files and selects first-pass source slices.
 - `source_findings.py` - builds review packets that pair smali evidence with optional JADX source.
+- `security_markers.py` - generates deterministic static security-marker triage.
 - `reviewed_source_notes.md` - hand-reviewed notes for selected source packets.
 - `report_builder.py` - creates a deterministic evidence brief.
 - `prompted_report.py` - uses `PRIVACY_PROMPT` to create the final audience-readable report.
@@ -159,4 +174,4 @@ Security analysis is a future third path. The repo does not currently define a `
 
 - Path 1, Androguard structured analysis: Milestone 1 complete.
 - Path 2, source reconstruction: inventory and source-finding packet generation exist; manual reconstruction with line citations remains.
-- Path 3, security marker analysis: planned; no dedicated prompt or workflow is implemented yet.
+- Path 3, security marker analysis: deterministic marker triage exists; no dedicated prompt or vulnerability report workflow is implemented yet.

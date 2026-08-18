@@ -23,6 +23,9 @@ These files support or reproduce the report:
 | `reconstruction_inventory.json` | Machine-readable reconstruction triage | `task inventory` |
 | `source_findings.md` | Human-readable source reconstruction review packets using smali and optional JADX context | `task source-findings` |
 | `source_findings.json` | Machine-readable source reconstruction review packets | `task source-findings` |
+| `security_markers.md` | Human-readable security-marker triage with static line references and exported-component context | `task security-markers` |
+| `security_markers.json` | Machine-readable security-marker triage | `task security-markers` |
+| `reviewed_security_notes.md` | Hand-reviewed interpretation of generated security-marker packets | Manual review |
 | `jadx_decompiled/` | Java-like source tree for reading and navigation | `task jadx` |
 | `jadx_selected/` | Targeted Java-like source for selected classes | `task jadx-class` |
 | `tik_tok_report.json` | Machine-readable Androguard structured report for the bundled TikTok sample | `task analyze` |
@@ -33,11 +36,13 @@ These files support or reproduce the report:
 - `task privacy-assessment` produces the full current static assessment package, including source-reconstruction triage and the prompted human report.
 - `task jadx-class` is the preferred way to add readable JADX context for specific classes in large APKs.
 - `task dynamic-plan` produces the active validation checklist for phone/proxy traffic review.
+- `task security-markers` produces static security-marker triage; it does not claim exploitability.
+- `task security-assessment` regenerates the structured APK report, apktool tree, and security-marker triage together.
 - `reviewed_source_notes.md` is the hand-checked bridge from raw source packets to stronger report prose.
 
 ## Notes
 
 - `privacy_assessment_report.md` is the report artifact. The other files are evidence, prompt, or triage material.
-- `tik_tok_report.json`, APK files, `source_findings.json`, and decompiled source trees are treated as generated/local artifacts by `.gitignore`.
+- `tik_tok_report.json`, APK files, `source_findings.json`, `security_markers.json`, and decompiled source trees are treated as generated/local artifacts by `.gitignore`.
 - `source_findings.md` is suitable to commit when it is small enough to review and useful for the report.
 - For another APK, pass `APK=...`, `REPORT=...`, `DECOMPILE_DIR=...`, `JADX_DIR=...`, `INVENTORY=...`, and `REPORT_MD=...` to the Taskfile targets.

@@ -44,6 +44,8 @@ task source-findings
 task report-evidence
 task report-draft
 task dynamic-plan
+task security-markers
+task security-assessment
 ```
 
 Before changing analysis code, run:
@@ -66,7 +68,7 @@ Put human interpretation of source packets in `reviewed_source_notes.md`. Keep `
 
 When regenerating analysis outputs, do not overwrite manual report drafts unless the task explicitly calls for it.
 
-There is no dedicated `SECURITY_PROMPT` yet. Security-marker work should stay evidence-first until that path is implemented: collect markers for command execution, dynamic loading, exported entry points, WebView bridges, native loading, and TLS/network weaknesses, then document triggerability and confidence separately from privacy capability claims.
+There is no dedicated `SECURITY_PROMPT` yet. Use `task security-markers` for deterministic security-marker triage against existing artifacts, or `task security-assessment` to regenerate the APK report, decompile tree, and marker triage together. Security-marker work should stay evidence-first: collect markers for command execution, dynamic loading, exported entry points, WebView bridges, native loading, and TLS/network weaknesses, then document triggerability and confidence separately from privacy capability claims.
 
 ## Evidence Standards
 

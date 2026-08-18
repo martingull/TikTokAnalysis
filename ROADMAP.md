@@ -32,7 +32,7 @@ The user-facing CLI surface should stay granular:
 - `task privacy-assessment`: full static privacy assessment package with apktool inventory, source-finding packets, and prompted report output.
 - `task jadx-class`: targeted Java-like reconstruction for one selected class when full JADX output is too large.
 - `task dynamic-plan`: runtime phone/proxy validation plan derived from static findings.
-- Security-marker analysis: future path for command execution, dynamic loading, injection surfaces, exported-component abuse, and similar bug-bounty-oriented evidence. This path should get a dedicated prompt and task once the privacy workflow is stable.
+- Security-marker analysis: deterministic marker triage for command execution, dynamic loading, injection surfaces, exported-component abuse, and similar bug-bounty-oriented evidence. This path should get reviewed source notes and a dedicated prompt only after the evidence schema is stable.
 
 ## Current State
 
@@ -171,8 +171,9 @@ Each reconstructed slice should include:
 
 ### 7. Security Marker Path
 
-- Add `SECURITY_PROMPT` only after the expected evidence schema is defined.
-- Build a deterministic marker report for shell execution, process spawning, dynamic class loading, native loading, WebView JavaScript bridges, exported component entry points, unsafe deserialization, and network/TLS weaknesses.
+- Generate deterministic marker triage with `task security-markers`.
+- Add `SECURITY_PROMPT` only after the expected evidence schema is validated against reviewed marker packets.
+- Build a reviewed marker report for shell execution, process spawning, dynamic class loading, native loading, WebView JavaScript bridges, exported component entry points, unsafe deserialization, and network/TLS weaknesses.
 - Keep this path bug-bounty-oriented: every issue needs triggerability notes, affected component or call path, exploit preconditions, and confidence.
 - Avoid claiming arbitrary code execution unless a reviewed source slice or dynamic test shows a controllable path into execution.
 
